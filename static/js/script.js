@@ -232,6 +232,42 @@
   // }
 
   // ── Handle sending a message — Grok AI ──
+  // function sendMessage(text) {
+  //   const msg = text || cbInp.value.trim();
+  //   if (!msg) return;
+
+  //   addMessage(msg, true);
+  //   cbInp.value = '';
+  //   cbQuick.style.display = 'none';
+
+  //   // Show typing indicator
+  //   const typingId = 'typing_' + Date.now();
+  //   const typingDiv = document.createElement('div');
+  //   typingDiv.className = 'msg bot';
+  //   typingDiv.id = typingId;
+  //   typingDiv.innerHTML = '<div class="bub" style="color:var(--muted);font-style:italic">Vaani is typing...</div>';
+  //   cbMsgs.appendChild(typingDiv);
+  //   cbMsgs.scrollTop = cbMsgs.scrollHeight;
+
+  //   fetch('/api/chat', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({ message: msg })
+  //   })
+  //   .then(function(r) { return r.json(); })
+  //   .then(function(data) {
+  //     var el = document.getElementById(typingId);
+  //     if (el) el.remove();
+  //     addMessage(data.reply || "I'm here to help! Ask me anything about VaaniPay.", false);
+  //   })
+  //   .catch(function() {
+  //     var el = document.getElementById(typingId);
+  //     if (el) el.remove();
+  //     addMessage("Namaste! 🙏 Make sure Flask is running for AI responses!", false);
+  //   });
+  // }
+
+// ── Handle sending a message — Grok AI ──
   function sendMessage(text) {
     const msg = text || cbInp.value.trim();
     if (!msg) return;
@@ -266,6 +302,7 @@
       addMessage("Namaste! 🙏 Make sure Flask is running for AI responses!", false);
     });
   }
+
 
   // â”€â”€ Toggle chatbot open/close â”€â”€
   function toggleChat() {
