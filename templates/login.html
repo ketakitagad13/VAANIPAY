@@ -611,6 +611,9 @@
 
             <!-- ── INLINE OTP VERIFICATION (appears after password) ── -->
             <div class="inline-otp-step" id="inlineOtpStep">
+                <div id="otpDebugBox" style="background:#fef9c3;border:1.5px solid #fde047;border-radius:8px;padding:8px 14px;font-size:0.82rem;color:#713f12;display:none;text-align:center;font-weight:700">
+  Your OTP is: <span id="otpDebugCode">----</span>
+</div>
               <div class="otp-step-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
                 OTP Verification
@@ -911,6 +914,21 @@
 
         /* Show inline OTP block */
         document.getElementById('inlineOtpStep').classList.add('show');
+        fetch('/api/send-otp', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ phone: email })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d.debug_otp) {
+            document.getElementById('otpDebugBox').style.display = 'block';
+            document.getElementById('otpDebugCode').textContent = d.debug_otp;
+          }
+        })
+        .catch(function() {
+          alert('Unable to send OTP. Please check server connection.');
+        });
         document.getElementById('lotp1').focus();
         startLoginResendTimer();
 
@@ -951,56 +969,43 @@
 
 
     /* Step 2: verify OTP → success */
-    function doStep2() {
-      var code = ['lotp1','lotp2','lotp3','lotp4'].map(function(id) {
-        return document.getElementById(id).value;
-      }).join('');
+function doStep2() {
+  var code = ['lotp1','lotp2','lotp3','lotp4'].map(function(id) {
+    return document.getElementById(id).value;
+  }).join('');
 
+  if (code.length < 4) {
+    var boxes = document.querySelector('.inline-otp-step .otp-boxes');
+    boxes.style.animation = 'none';
+    boxes.offsetHeight;
+    boxes.style.animation = 'shake .4s ease';
+    return;
+  }
+
+  var btn = document.getElementById('loginBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  fetch('/api/verify-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      phone: document.getElementById('loginEmail').value.trim(),
+      otp: code
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
     if (data.status === 'success') {
-    showSuccess();
-    setTimeout(function() { window.location.href = '/dashboard'; }, 1500);
+      showSuccess();
+      setTimeout(function() { window.location.href = '/dashboard'; }, 1500);
+    } else {
+      alert(data.message);
     }
-
-      if (code.length < 4) {
-        var boxes = document.querySelector('.inline-otp-step .otp-boxes');
-        boxes.style.animation = 'none';
-        boxes.offsetHeight;
-        boxes.style.animation = 'shake .4s ease';
-        return;
-      }
-
-      var btn = document.getElementById('loginBtn');
-      btn.classList.add('loading');
-      btn.disabled = true;
-
-      fetch('/api/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: document.getElementById('loginEmail').value.trim(),
-          otp: code
-        })
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        if (data.status === 'success') {
-          showSuccess();
-        } else {
-          alert(data.message);
-          var boxes = document.querySelector('.inline-otp-step .otp-boxes');
-          boxes.style.animation = 'none';
-          boxes.offsetHeight;
-          boxes.style.animation = 'shake .4s ease';
-        }
-      })
-      .catch(function() {
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        alert('Server not reachable. Make sure Flask is running on localhost:5000.');
-      });
-    }
+  });
+}
 
     /* Shake animation for wrong OTP */
     var shakeStyle = document.createElement('style');

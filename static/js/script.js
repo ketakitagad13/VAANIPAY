@@ -1236,81 +1236,70 @@ function parseCommand(text) {
    10. WALLET API CONNECTION
    ===================================== */
 
-// Load balance
-async function loadBalance(){
+async function loadBalance() {
+  var balEl = document.getElementById('walletBalance');
+  if (!balEl) return;
 
-const res = await fetch("/api/balance");
-const data = await res.json();
-
-document.getElementById("walletBalance").innerText =
-"₹" + data.balance;
-
+  try {
+    var res = await fetch('/api/balance');
+    var data = await res.json();
+    balEl.innerText = '₹' + (data.balance || 0);
+  } catch (e) {
+    console.warn('Wallet balance load failed:', e);
+  }
 }
 
+async function vaaniSendMoney(name, amount) {
+  try {
+    var res = await fetch('/api/pay', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        to: name,
+        amount: amount,
+        language: 'hi-IN'
+      })
+    });
 
-// Send money
-async function vaaniSendMoney(name, amount){
+    var data = await res.json();
 
-const res = await fetch("/api/pay",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-name:name,
-amount:amount
-})
+    if (data.status === 'success') {
+      alert(data.message || 'Payment successful');
+      await loadBalance();
+      await loadTransactions();
+    } else {
+      alert(data.message || 'Payment failed');
+    }
+  } catch (e) {
+    console.warn('Wallet payment failed:', e);
+    alert('Payment request failed. Please try again.');
+  }
+}
+
+async function loadTransactions() {
+  var list = document.getElementById('txnList');
+  if (!list) return;
+
+  try {
+    var res = await fetch('/api/transactions');
+    var data = await res.json();
+    var txns = Array.isArray(data.transactions) ? data.transactions : [];
+
+    list.innerHTML = '';
+    txns.slice().reverse().forEach(function(txn) {
+      var item = document.createElement('div');
+      var receiver = txn.to || txn.name || 'Unknown';
+      item.textContent = receiver + ' - ₹' + (txn.amount || 0);
+      list.appendChild(item);
+    });
+  } catch (e) {
+    console.warn('Wallet transaction load failed:', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadBalance();
+  loadTransactions();
 });
-
-const data = await res.json();
-
-if(data.success){
-
-alert("Payment successful");
-
-document.getElementById("walletBalance").innerText =
-"₹" + data.balance;
-
-loadTransactions();
-
-}
-else{
-
-alert(data.message);
-
-}
-
-}
-
-
-// Load transactions
-async function loadTransactions(){
-
-const res = await fetch("/api/transactions");
-const data = await res.json();
-
-const list = document.getElementById("txnList");
-
-list.innerHTML="";
-
-data.reverse().forEach(txn=>{
-
-const item=document.createElement("div");
-
-item.innerHTML=
-txn.name+" - ₹"+txn.amount;
-
-list.appendChild(item);
-
-});
-
-}
-
-
-// Load when page opens
-window.onload=function(){
-
-loadBalance();
-loadTransactions();
-
-};
