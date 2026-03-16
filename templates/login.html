@@ -473,14 +473,14 @@
   <nav id="nav">
     <div class="wrap">
       <div class="nav-row">
-        <a href="index.html" class="nav-logo-link">
+        <a href="/" class="nav-logo-link">
           <!-- If logo.jpeg loads it shows; otherwise shows text fallback -->
-          <img src="assets/logo.jpeg" alt="VaaniPay"
+          <img src="/static/assets/icon.jpeg" alt="VaaniPay"
                class="nav-logo-img"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
           <span class="nav-logo-text" style="display:none">VaaniPay</span>
         </a>
-        <a href="index.html" class="nav-back">
+        <a href="/" class="nav-back">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           Back to Home
         </a>
@@ -924,16 +924,42 @@
     }
 
     /* Step 2: verify OTP → success */
+    // function doStep2() {
+    //   var code = ['lotp1','lotp2','lotp3','lotp4'].map(function(id) {
+    //     return document.getElementById(id).value;
+    //   }).join('');
+
+    //   if (code.length < 4) {
+    //     /* shake the boxes */
+    //     var boxes = document.querySelector('.inline-otp-step .otp-boxes');
+    //     boxes.style.animation = 'none';
+    //     boxes.offsetHeight; /* reflow */
+    //     boxes.style.animation = 'shake .4s ease';
+    //     return;
+    //   }
+
+    //   var btn = document.getElementById('loginBtn');
+    //   btn.classList.add('loading');
+    //   btn.disabled = true;
+
+    //   setTimeout(function() {
+    //     btn.classList.remove('loading');
+    //     btn.disabled = false;
+    //     showSuccess();
+    //   }, 1000);
+    // }
+
+
+    /* Step 2: verify OTP → success */
     function doStep2() {
       var code = ['lotp1','lotp2','lotp3','lotp4'].map(function(id) {
         return document.getElementById(id).value;
       }).join('');
 
       if (code.length < 4) {
-        /* shake the boxes */
         var boxes = document.querySelector('.inline-otp-step .otp-boxes');
         boxes.style.animation = 'none';
-        boxes.offsetHeight; /* reflow */
+        boxes.offsetHeight;
         boxes.style.animation = 'shake .4s ease';
         return;
       }
@@ -942,11 +968,33 @@
       btn.classList.add('loading');
       btn.disabled = true;
 
-      setTimeout(function() {
+      fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: document.getElementById('loginEmail').value.trim(),
+          otp: code
+        })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
         btn.classList.remove('loading');
         btn.disabled = false;
-        showSuccess();
-      }, 1000);
+        if (data.status === 'success') {
+          showSuccess();
+        } else {
+          alert(data.message);
+          var boxes = document.querySelector('.inline-otp-step .otp-boxes');
+          boxes.style.animation = 'none';
+          boxes.offsetHeight;
+          boxes.style.animation = 'shake .4s ease';
+        }
+      })
+      .catch(function() {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        alert('Server not reachable. Make sure Flask is running on localhost:5000.');
+      });
     }
 
     /* Shake animation for wrong OTP */
