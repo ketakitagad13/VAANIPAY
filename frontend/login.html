@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VaaniPay — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #1a2e1f;
+      background: #fff;
+      overflow-x: hidden;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── CSS VARIABLES ─── */
+    :root {
+      --g1: #2eb050;
+      --g2: #1a9e3c;
+      --g3: #e8f7ed;
+      --g4: #5acc78;
+      --o1: #f47c20;
+      --o2: #e06010;
+      --o3: #fff4eb;
+      --dark: #0f1f13;
+      --text: #1a2e1f;
+      --mid: #4a6652;
+      --muted: #7a9485;
+      --border: #d0e8d8;
+      --white: #ffffff;
+      --off: #f7fbf8;
+      --r-sm: 10px;
+      --r-md: 18px;
+      --r-lg: 26px;
+      --r-xl: 40px;
+      --sh-g: 0 8px 32px rgba(46,176,80,.18);
+      --sh-lg: 0 20px 64px rgba(46,176,80,.16);
+    }
+
+    /* ─── NAVBAR ─── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 12px 0;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 2px 24px rgba(46,176,80,.10);
+    }
+    .wrap { width: 92%; max-width: 1180px; margin: 0 auto; }
+    .nav-row {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px;
+    }
+    .nav-logo-link { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-img { height: 48px; width: auto; object-fit: contain; display: block; }
+
+    /* Fallback logo text (if image fails) */
+    .nav-logo-text {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--g1);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-back {
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .9rem;
+      color: var(--mid); padding: 9px 22px; border-radius: 50px;
+      border: 2px solid var(--border);
+      transition: background .2s, color .2s, border-color .2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .nav-back:hover { background: var(--g3); color: var(--g1); border-color: var(--g1); }
+    .nav-back svg { width: 15px; height: 15px; }
+
+    /* ─── PAGE LAYOUT ─── */
+    .page {
+      min-height: 100vh;
+      padding-top: 80px;
+      background: linear-gradient(150deg, #f0fbf3 0%, #fff 48%, #fff8f2 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+
+    /* Background blobs */
+    .blob-a {
+      position: absolute; width: 580px; height: 580px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,176,80,.07) 0%, transparent 70%);
+      top: -150px; right: -150px; pointer-events: none;
+    }
+    .blob-b {
+      position: absolute; width: 360px; height: 360px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(244,124,32,.06) 0%, transparent 70%);
+      bottom: 80px; left: -80px; pointer-events: none;
+    }
+
+    /* ─── MAIN CARD ─── */
+    .login-wrap {
+      width: 92%; max-width: 920px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 580px;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(46,176,80,.14), 0 8px 24px rgba(0,0,0,.06);
+      position: relative; z-index: 1;
+      margin: 40px auto;
+    }
+
+    /* ── LEFT PANEL (Green) ── */
+    .login-left {
+      background: linear-gradient(145deg, var(--g1) 0%, #0e7035 100%);
+      padding: 56px 48px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .login-left::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .login-left > * { position: relative; z-index: 1; }
+
+    .left-logo {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
+    }
+    .left-logo-img { height: 38px; width: auto; object-fit: contain; }
+    .left-logo-text {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 1.35rem; color: #fff;
+    }
+
+    .left-heading {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      color: #fff; line-height: 1.2; margin-bottom: 14px;
+    }
+    .left-sub {
+      font-size: .95rem; color: rgba(255,255,255,.72);
+      line-height: 1.7; margin-bottom: 36px;
+    }
+
+    /* Feature list in left panel */
+    .left-features { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+    .lf-item {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px; padding: 13px 16px;
+    }
+    .lf-ic {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 9px; background: rgba(255,255,255,.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+    }
+    .lf-text { font-size: .84rem; color: rgba(255,255,255,.85); font-weight: 500; }
+
+    /* Mic animation in left panel */
+    .left-mic {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 16px;
+    }
+    .mic-pulse {
+      width: 46px; height: 46px; background: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 8px rgba(255,255,255,.15), 0 0 0 16px rgba(255,255,255,.07);
+      animation: micring 2.5s ease-in-out infinite;
+    }
+    @keyframes micring {
+      0%, 100% { box-shadow: 0 0 0 8px rgba(255,255,255,.15), 0 0 0 16px rgba(255,255,255,.07); }
+      50%       { box-shadow: 0 0 0 12px rgba(255,255,255,.2), 0 0 0 22px rgba(255,255,255,.08); }
+    }
+    .mic-pulse svg { width: 20px; height: 20px; color: var(--g1); }
+    .mic-label { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .82rem; color: #fff; }
+    .mic-sub { font-size: .72rem; color: rgba(255,255,255,.6); margin-top: 2px; }
+
+    /* ── RIGHT PANEL (White) ── */
+    .login-right {
+      background: #fff;
+      padding: 52px 48px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .form-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: .76rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--g1); background: var(--g3);
+      padding: 5px 14px; border-radius: 50px;
+      border: 1px solid rgba(46,176,80,.2);
+      margin-bottom: 18px;
+    }
+    .chip-dot { width: 7px; height: 7px; background: var(--g4); border-radius: 50%; animation: blink 2s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
+    .form-title {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      color: var(--text); margin-bottom: 6px; line-height: 1.2;
+    }
+    .form-sub { font-size: .9rem; color: var(--muted); margin-bottom: 32px; }
+
+    /* ── TABS (Login / Sign Up) ── */
+    .tabs {
+      display: flex; background: var(--off);
+      border-radius: 12px; padding: 4px; margin-bottom: 28px;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1; padding: 10px;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .88rem;
+      border-radius: 9px; color: var(--muted); background: transparent;
+      transition: all .2s;
+    }
+    .tab-btn.active {
+      background: #fff; color: var(--g1);
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: .82rem; color: var(--mid);
+    }
+    .field-wrap {
+      position: relative; display: flex; align-items: center;
+    }
+    .field-icon {
+      position: absolute; left: 14px; width: 17px; height: 17px;
+      color: var(--muted); pointer-events: none;
+    }
+    .field input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 14px 12px 42px;
+      font-size: .9rem; font-family: inherit;
+      color: var(--text); background: var(--off);
+      transition: border-color .2s, background .2s, box-shadow .2s;
+      outline: none;
+    }
+    .field input:focus {
+      border-color: var(--g1);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(46,176,80,.1);
+    }
+    .field input::placeholder { color: var(--muted); }
+    .field input.error { border-color: #e53e3e; box-shadow: 0 0 0 3px rgba(229,62,62,.08); }
+
+    /* Password toggle */
+    .eye-btn {
+      position: absolute; right: 14px;
+      background: none; padding: 4px;
+      color: var(--muted); transition: color .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .eye-btn:hover { color: var(--g1); }
+    .eye-btn svg { width: 17px; height: 17px; display: block; }
+    .eye-btn svg.hidden { display: none; }
+
+    /* Error messages */
+    .field-err {
+      font-size: .76rem; color: #e53e3e; font-weight: 600;
+      display: none; align-items: center; gap: 4px;
+    }
+    .field-err.show { display: flex; }
+    .field-err svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* ── EXTRAS ── */
+    .form-extras {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 10px;
+    }
+    .remember {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .84rem; color: var(--mid); cursor: pointer;
+    }
+    .remember input[type=checkbox] {
+      width: 16px; height: 16px; accent-color: var(--g1);
+      border-radius: 4px; cursor: pointer;
+    }
+    .forgot {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: .84rem; color: var(--g1);
+      transition: color .2s;
+    }
+    .forgot:hover { color: var(--g2); }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-login {
+      width: 100%;
+      background: var(--g1); color: #fff;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem;
+      padding: 14px 30px; border-radius: 50px;
+      box-shadow: 0 4px 18px rgba(46,176,80,.35);
+      transition: transform .15s, box-shadow .2s, background .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .btn-login:hover { background: var(--g2); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(46,176,80,.42); }
+    .btn-login:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .btn-loader { display: none; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-login.loading .btn-loader { display: block; }
+    .btn-login.loading .btn-arrow { display: none; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      font-size: .78rem; color: var(--muted); margin-bottom: 20px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── SOCIAL LOGIN ── */
+    .social-btns { display: flex; gap: 10px; margin-bottom: 22px; }
+    .social-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+      border: 1.5px solid var(--border); border-radius: var(--r-sm);
+      padding: 11px; background: #fff;
+      font-family: 'Nunito', sans-serif; font-weight: 600; font-size: .82rem;
+      color: var(--text); transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .social-btn:hover { border-color: rgba(46,176,80,.3); background: var(--off); box-shadow: var(--sh-g); }
+    .social-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* ── BOTTOM LINK ── */
+    .switch-text {
+      text-align: center; font-size: .85rem; color: var(--muted);
+    }
+    .switch-text a {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      color: var(--g1); transition: color .2s;
+    }
+    .switch-text a:hover { color: var(--g2); }
+
+    /* ── SUCCESS STATE ── */
+    .success-state {
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 32px 0;
+    }
+    .success-state.show { display: flex; }
+    .success-icon {
+      width: 72px; height: 72px; background: var(--g1); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+      box-shadow: 0 0 0 12px rgba(46,176,80,.12), 0 0 0 24px rgba(46,176,80,.06);
+      animation: popin .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popin { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .success-icon svg { width: 34px; height: 34px; color: #fff; }
+    .success-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--text); margin-bottom: 8px; }
+    .success-sub { font-size: .9rem; color: var(--muted); }
+
+    /* ── INLINE OTP STEP (inside login form, below password) ── */
+    .inline-otp-step {
+      display: none; flex-direction: column; gap: 14px;
+      background: var(--g3); border: 1.5px solid rgba(46,176,80,.2);
+      border-radius: var(--r-md); padding: 18px 20px; margin-top: 4px;
+      animation: slideDown .3s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .inline-otp-step.show { display: flex; }
+    .otp-step-label {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: .82rem; color: var(--g2);
+    }
+    .otp-step-label svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .otp-step-sub { font-size: .78rem; color: var(--mid); margin-top: -6px; }
+
+    /* ── OTP MODE (standalone — kept for mobile-OTP tab) ── */
+    .otp-group {
+      display: none; flex-direction: column; gap: 20px;
+    }
+    .otp-group.show { display: flex; }
+    .otp-hint { font-size: .85rem; color: var(--mid); text-align: center; }
+    .otp-hint strong { color: var(--text); }
+    .otp-boxes {
+      display: flex; gap: 10px; justify-content: center;
+    }
+    .otp-inp {
+      width: 50px; height: 54px; text-align: center;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.3rem;
+      border: 1.5px solid var(--border); border-radius: var(--r-sm);
+      background: var(--off); color: var(--text); outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .otp-inp:focus {
+      border-color: var(--g1); background: #fff;
+      box-shadow: 0 0 0 3px rgba(46,176,80,.1);
+    }
+    .resend-row {
+      text-align: center; font-size: .82rem; color: var(--muted);
+    }
+    .resend-btn {
+      color: var(--g1); font-weight: 700; background: none;
+      font-family: 'Nunito', sans-serif; font-size: .82rem;
+    }
+    .resend-btn:disabled { color: var(--muted); }
+
+    /* ── PHONE FORM ── */
+    .phone-group { display: none; flex-direction: column; gap: 16px; }
+    .phone-group.show { display: flex; }
+    .phone-wrap { position: relative; display: flex; align-items: center; gap: 0; }
+    .phone-prefix {
+      background: var(--off); border: 1.5px solid var(--border);
+      border-right: none; border-radius: var(--r-sm) 0 0 var(--r-sm);
+      padding: 12px 14px; font-weight: 700; font-size: .9rem;
+      color: var(--mid); flex-shrink: 0;
+    }
+    .phone-inp {
+      flex: 1; border: 1.5px solid var(--border); border-left: none;
+      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      padding: 12px 14px; font-size: .9rem; font-family: inherit;
+      color: var(--text); background: var(--off);
+      transition: border-color .2s, background .2s, box-shadow .2s;
+      outline: none;
+    }
+    .phone-inp:focus {
+      border-color: var(--g1); background: #fff;
+      box-shadow: 0 0 0 3px rgba(46,176,80,.1);
+    }
+    .phone-inp::placeholder { color: var(--muted); }
+
+    /* ── SIGN-UP EXTRA FIELDS ── */
+    .signup-only { display: none; }
+    .signup-only.show { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .login-wrap { grid-template-columns: 1fr; max-width: 480px; }
+      .login-left { display: none; }
+      .login-right { padding: 40px 28px; }
+    }
+    @media (max-width: 480px) {
+      .login-wrap { border-radius: var(--r-lg); }
+      .login-right { padding: 32px 22px; }
+      .otp-inp { width: 42px; height: 48px; font-size: 1.1rem; }
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .rv { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+    .rv.in { opacity: 1; transform: translateY(0); }
+    .rv.d1 { transition-delay: .1s; }
+    .rv.d2 { transition-delay: .2s; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav id="nav">
+    <div class="wrap">
+      <div class="nav-row">
+        <a href="index.html" class="nav-logo-link">
+          <!-- If logo.jpeg loads it shows; otherwise shows text fallback -->
+          <img src="assets/logo.jpeg" alt="VaaniPay"
+               class="nav-logo-img"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <span class="nav-logo-text" style="display:none">VaaniPay</span>
+        </a>
+        <a href="index.html" class="nav-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ PAGE ══ -->
+  <div class="page">
+    <div class="blob-a"></div>
+    <div class="blob-b"></div>
+
+    <div class="login-wrap rv">
+
+      <!-- ═══ LEFT PANEL ═══ -->
+      <div class="login-left">
+        <div>
+          <!-- Logo -->
+          <div class="left-logo">
+            <img src="assets/logo.jpeg" alt="VaaniPay" class="left-logo-img"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+            <span class="left-logo-text" style="display:none">VaaniPay</span>
+          </div>
+
+          <h2 class="left-heading">Your Money,<br>Your Voice.</h2>
+          <p class="left-sub">Send payments in seconds — just speak in your own language. No UPI IDs to remember.</p>
+
+          <!-- Feature list -->
+          <div class="left-features">
+            <div class="lf-item">
+              <div class="lf-ic">🌐</div>
+              <div class="lf-text">12 Indian languages supported</div>
+            </div>
+            <div class="lf-item">
+              <div class="lf-ic">🔒</div>
+              <div class="lf-text">Bank-grade 256-bit encryption</div>
+            </div>
+            <div class="lf-item">
+              <div class="lf-ic">📶</div>
+              <div class="lf-text">Works offline on 2G/3G networks</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mic widget -->
+        <div class="left-mic">
+          <div class="mic-pulse">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+              <path d="M19 10a7 7 0 0 1-14 0"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+              <line x1="8" y1="22" x2="16" y2="22"/>
+            </svg>
+          </div>
+          <div>
+            <div class="mic-label">Ready to listen</div>
+            <div class="mic-sub">"Send ₹500 to Ramesh"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ RIGHT PANEL ═══ -->
+      <div class="login-right">
+
+        <!-- SUCCESS STATE (hidden initially) -->
+        <div class="success-state" id="successState">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="success-title">Welcome back! 🎉</div>
+          <p class="success-sub">Redirecting you to your dashboard…</p>
+        </div>
+
+        <!-- FORM STATE (visible by default) -->
+        <div id="formState">
+          <div class="form-chip"><div class="chip-dot"></div>Secure Login</div>
+          <h1 class="form-title" id="formTitle">Welcome Back</h1>
+          <p class="form-sub" id="formSub">Login to your VaaniPay account</p>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
+            <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+          </div>
+
+          <!-- ── LOGIN with Email/Password ── -->
+          <div id="loginForm">
+            <!-- Email -->
+            <div class="field-group">
+              <div class="field">
+                <label for="loginEmail">Email or Mobile</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <input type="text" id="loginEmail" placeholder="you@example.com or 9876543210" autocomplete="email" />
+                </div>
+                <div class="field-err" id="emailErr">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span>Please enter a valid email or 10-digit mobile number</span>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="field">
+                <label for="loginPass">Password</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password" />
+                  <button class="eye-btn" id="eyeBtn" type="button" aria-label="Toggle password visibility" onclick="togglePass()">
+                    <!-- Eye open (shown by default = password hidden) -->
+                    <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <!-- Eye closed (shown when password is visible) -->
+                    <svg id="eyeClosed" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                      <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="field-err" id="passErr">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span>Password must be at least 6 characters</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── INLINE OTP VERIFICATION (appears after password) ── -->
+            <div class="inline-otp-step" id="inlineOtpStep">
+              <div class="otp-step-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                OTP Verification
+              </div>
+              <p class="otp-step-sub">Enter the 4-digit OTP sent to your registered mobile number.</p>
+              <!-- OTP boxes -->
+              <div class="otp-boxes">
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="lotp1" />
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="lotp2" />
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="lotp3" />
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="lotp4" />
+              </div>
+              <div class="resend-row">
+                Didn't receive it?
+                <button class="resend-btn" id="loginResendBtn" onclick="loginResendOTP()" disabled>
+                  Resend in <span id="loginTimerDisplay">30s</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-extras">
+              <label class="remember">
+                <input type="checkbox" id="rememberMe" />
+                Remember me
+              </label>
+              <a href="#" class="forgot">Forgot password?</a>
+            </div>
+
+            <button class="btn-login" id="loginBtn" onclick="handleLogin()">
+              <svg class="btn-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <svg class="btn-loader" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+              <span id="loginBtnText">Send OTP &amp; Continue</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="divider">or continue with</div>
+
+            <!-- Social -->
+            <div class="social-btns">
+              <button class="social-btn" onclick="socialLogin('Google')">
+                <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Google
+              </button>
+              <button class="social-btn" onclick="socialLogin('WhatsApp')">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#25D366"/><path d="M17 14.5c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-1.5-.7-2.5-1.6-3.4-3-.3-.4 0-.6.2-.8l.5-.6c.1-.2.1-.3.2-.5s0-.4-.1-.5l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.1-1.3-.1-.1-.3-.2-.6-.4z" fill="white"/></svg>
+                WhatsApp
+              </button>
+            </div>
+
+            <!-- OR use OTP -->
+            <div class="divider">or</div>
+            <button class="btn-login" style="background:transparent; color:var(--g1); border:2px solid var(--g1); box-shadow:none;" onclick="switchToOTP()">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              Login with Mobile OTP
+            </button>
+          </div>
+
+          <!-- ── OTP FORM ── -->
+          <div class="otp-group" id="otpGroup">
+            <!-- Phone number input -->
+            <div class="phone-group show" id="phoneGroup">
+              <p style="font-size:.88rem;color:var(--mid)">Enter your mobile number to receive a one-time password.</p>
+              <div>
+                <label style="font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;color:var(--mid);display:block;margin-bottom:7px">Mobile Number</label>
+                <div class="phone-wrap">
+                  <div class="phone-prefix">+91</div>
+                  <input class="phone-inp" id="otpPhone" type="tel" maxlength="10" placeholder="9876 543 210" inputmode="numeric" />
+                </div>
+              </div>
+              <button class="btn-login" onclick="sendOTP()">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Send OTP
+              </button>
+            </div>
+
+            <!-- OTP boxes (hidden until phone entered) -->
+            <div id="otpBoxGroup" style="display:none; flex-direction:column; gap:16px;">
+              <p class="otp-hint">We sent a 4-digit OTP to <strong id="otpPhoneDisplay">+91 XXXXXXXX</strong></p>
+              <div class="otp-boxes">
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="otp1" />
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="otp2" />
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="otp3" />
+                <input class="otp-inp" type="text" maxlength="1" inputmode="numeric" id="otp4" />
+              </div>
+              <div class="resend-row">
+                Didn't receive it?
+                <button class="resend-btn" id="resendBtn" onclick="resendOTP()" disabled>Resend in <span id="timerDisplay">30s</span></button>
+              </div>
+              <button class="btn-login" onclick="verifyOTP()">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Verify &amp; Login
+              </button>
+            </div>
+
+            <button onclick="backToLogin()" style="background:none;color:var(--muted);font-size:.84rem;text-align:center;width:100%;padding:8px;font-family:'Nunito',sans-serif;font-weight:600">
+              ← Back to email login
+            </button>
+          </div>
+
+          <!-- ── SIGN UP FORM ── -->
+          <div id="signupForm" style="display:none">
+            <div class="field-group">
+              <!-- Name -->
+              <div class="field">
+                <label for="signupName">Full Name</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input type="text" id="signupName" placeholder="Ramesh Kumar" autocomplete="name" />
+                </div>
+              </div>
+              <!-- Email -->
+              <div class="field">
+                <label for="signupEmail">Email Address</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email" />
+                </div>
+              </div>
+              <!-- Phone -->
+              <div class="field">
+                <label>Mobile Number</label>
+                <div class="phone-wrap">
+                  <div class="phone-prefix">+91</div>
+                  <input class="phone-inp" type="tel" maxlength="10" placeholder="9876 543 210" id="signupPhone" inputmode="numeric" />
+                </div>
+              </div>
+              <!-- Password -->
+              <div class="field">
+                <label for="signupPass">Create Password</label>
+                <div class="field-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <input type="password" id="signupPass" placeholder="Min 6 characters" autocomplete="new-password" />
+                </div>
+              </div>
+              <!-- Terms -->
+              <label class="remember" style="font-size:.82rem">
+                <input type="checkbox" id="termsCheck" />
+                I agree to the <a href="#" style="color:var(--g1);font-weight:700;margin-left:4px">Terms of Service</a>&nbsp;&amp;&nbsp;<a href="#" style="color:var(--g1);font-weight:700">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button class="btn-login" id="signupBtn" onclick="handleSignup()">
+              <svg class="btn-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <svg class="btn-loader" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+              Create Free Account
+            </button>
+
+            <div class="divider">or continue with</div>
+            <div class="social-btns">
+              <button class="social-btn" onclick="socialLogin('Google')">
+                <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Google
+              </button>
+              <button class="social-btn" onclick="socialLogin('WhatsApp')">
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#25D366"/><path d="M17 14.5c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-1.5-.7-2.5-1.6-3.4-3-.3-.4 0-.6.2-.8l.5-.6c.1-.2.1-.3.2-.5s0-.4-.1-.5l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.1-1.3-.1-.1-.3-.2-.6-.4z" fill="white"/></svg>
+                WhatsApp
+              </button>
+            </div>
+          </div>
+
+          <p class="switch-text" id="switchText">
+            Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign up free</a>
+          </p>
+        </div>
+
+      </div><!-- /login-right -->
+    </div><!-- /login-wrap -->
+  </div><!-- /page -->
+
+  <!-- ══ JAVASCRIPT ══ -->
+  <script>
+    /* ── Scroll reveal ── */
+    (function() {
+      const els = document.querySelectorAll('.rv');
+      const obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function(el) { obs.observe(el); });
+    })();
+
+    /* ── Tab switcher ── */
+    function switchTab(tab) {
+      const loginForm  = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const otpGroup   = document.getElementById('otpGroup');
+      const tabLogin   = document.getElementById('tabLogin');
+      const tabSignup  = document.getElementById('tabSignup');
+      const formTitle  = document.getElementById('formTitle');
+      const formSub    = document.getElementById('formSub');
+      const switchText = document.getElementById('switchText');
+
+      // Hide OTP group always
+      otpGroup.style.display = 'none';
+
+      if (tab === 'login') {
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        formTitle.textContent = 'Welcome Back';
+        formSub.textContent = 'Login to your VaaniPay account';
+        switchText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchTab(\'signup\');return false;">Sign up free</a>';
+        /* Reset login 2-step state */
+        loginStep = 'credentials';
+        var btnText = document.getElementById('loginBtnText');
+        if (btnText) btnText.textContent = 'Send OTP & Continue';
+        var otpBlock = document.getElementById('inlineOtpStep');
+        if (otpBlock) otpBlock.classList.remove('show');
+        var em = document.getElementById('loginEmail');
+        var ps = document.getElementById('loginPass');
+        if (em) em.disabled = false;
+        if (ps) ps.disabled = false;
+      } else {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+        tabLogin.classList.remove('active');
+        tabSignup.classList.add('active');
+        formTitle.textContent = 'Create Account';
+        formSub.textContent = 'Join 2.4M+ users on VaaniPay';
+        switchText.innerHTML = 'Already have an account? <a href="#" onclick="switchTab(\'login\');return false;">Login</a>';
+      }
+    }
+
+    /* ── Password toggle ── */
+    function togglePass() {
+      var inp = document.getElementById('loginPass');
+      var eyeOpen   = document.getElementById('eyeOpen');
+      var eyeClosed = document.getElementById('eyeClosed');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        eyeOpen.classList.add('hidden');
+        eyeClosed.classList.remove('hidden');
+      } else {
+        inp.type = 'password';
+        eyeOpen.classList.remove('hidden');
+        eyeClosed.classList.add('hidden');
+      }
+    }
+
+    /* ── Validate email or phone ── */
+    function isValidEmailOrPhone(val) {
+      const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneReg = /^[6-9]\d{9}$/;
+      return emailReg.test(val) || phoneReg.test(val);
+    }
+
+    /* ── Login state: 'credentials' or 'otp' ── */
+    var loginStep = 'credentials';
+    var loginResendTimer = null;
+
+    /* ── Login handler (2-step) ── */
+    function handleLogin() {
+      if (loginStep === 'credentials') {
+        doStep1();
+      } else {
+        doStep2();
+      }
+    }
+
+    /* Step 1: validate credentials → show inline OTP */
+    function doStep1() {
+      var email    = document.getElementById('loginEmail').value.trim();
+      var pass     = document.getElementById('loginPass').value;
+      var emailErr = document.getElementById('emailErr');
+      var passErr  = document.getElementById('passErr');
+      var btn      = document.getElementById('loginBtn');
+      var valid    = true;
+
+      if (!isValidEmailOrPhone(email)) {
+        document.getElementById('loginEmail').classList.add('error');
+        emailErr.classList.add('show');
+        valid = false;
+      } else {
+        document.getElementById('loginEmail').classList.remove('error');
+        emailErr.classList.remove('show');
+      }
+
+      if (pass.length < 6) {
+        document.getElementById('loginPass').classList.add('error');
+        passErr.classList.add('show');
+        valid = false;
+      } else {
+        document.getElementById('loginPass').classList.remove('error');
+        passErr.classList.remove('show');
+      }
+
+      if (!valid) return;
+
+      /* Simulate sending OTP */
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(function() {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        /* Show inline OTP block */
+        document.getElementById('inlineOtpStep').classList.add('show');
+        document.getElementById('lotp1').focus();
+        startLoginResendTimer();
+
+        /* Switch button to verify mode */
+        loginStep = 'otp';
+        document.getElementById('loginBtnText').textContent = 'Verify OTP & Login';
+        /* Lock email/pass fields */
+        document.getElementById('loginEmail').disabled = true;
+        document.getElementById('loginPass').disabled  = true;
+      }, 1200);
+    }
+
+    /* Step 2: verify OTP → success */
+    function doStep2() {
+      var code = ['lotp1','lotp2','lotp3','lotp4'].map(function(id) {
+        return document.getElementById(id).value;
+      }).join('');
+
+      if (code.length < 4) {
+        /* shake the boxes */
+        var boxes = document.querySelector('.inline-otp-step .otp-boxes');
+        boxes.style.animation = 'none';
+        boxes.offsetHeight; /* reflow */
+        boxes.style.animation = 'shake .4s ease';
+        return;
+      }
+
+      var btn = document.getElementById('loginBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(function() {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        showSuccess();
+      }, 1000);
+    }
+
+    /* Shake animation for wrong OTP */
+    var shakeStyle = document.createElement('style');
+    shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+    document.head.appendChild(shakeStyle);
+
+    /* Login resend timer */
+    function startLoginResendTimer() {
+      var secs    = 30;
+      var btn     = document.getElementById('loginResendBtn');
+      var display = document.getElementById('loginTimerDisplay');
+      btn.disabled = true;
+      clearInterval(loginResendTimer);
+      loginResendTimer = setInterval(function() {
+        secs--;
+        display.textContent = secs + 's';
+        if (secs <= 0) {
+          clearInterval(loginResendTimer);
+          btn.disabled = false;
+          btn.innerHTML = 'Resend OTP';
+        }
+      }, 1000);
+    }
+
+    function loginResendOTP() {
+      /* Reset boxes */
+      ['lotp1','lotp2','lotp3','lotp4'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('lotp1').focus();
+      document.getElementById('loginResendBtn').innerHTML = 'Resend in <span id="loginTimerDisplay">30s</span>';
+      startLoginResendTimer();
+    }
+
+    /* Auto-advance for inline OTP boxes */
+    document.addEventListener('DOMContentLoaded', function() {
+      var loginOtpIds = ['lotp1','lotp2','lotp3','lotp4'];
+      loginOtpIds.forEach(function(id, i, arr) {
+        var inp = document.getElementById(id);
+        if (!inp) return;
+        inp.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g, ''); /* digits only */
+          if (this.value.length === 1 && i < arr.length - 1) {
+            document.getElementById(arr[i+1]).focus();
+          }
+          /* Auto-submit when last box filled */
+          if (i === arr.length - 1 && this.value.length === 1) {
+            setTimeout(doStep2, 300);
+          }
+        });
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && i > 0) {
+            document.getElementById(arr[i-1]).focus();
+          }
+        });
+      });
+    });
+
+    /* ── Sign-up handler ── */
+    function handleSignup() {
+      const name  = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      const pass  = document.getElementById('signupPass').value;
+      const terms = document.getElementById('termsCheck').checked;
+      const btn   = document.getElementById('signupBtn');
+
+      if (!name || !email || !phone || !pass || !terms) {
+        alert('Please fill in all fields and agree to the Terms of Service.');
+        return;
+      }
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(function() {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        showSuccess('Account created!');
+      }, 2000);
+    }
+
+    /* ── Show success ── */
+    function showSuccess(msg) {
+      document.getElementById('formState').style.display = 'none';
+      var s = document.getElementById('successState');
+      s.classList.add('show');
+      if (msg) s.querySelector('.success-title').textContent = msg + ' 🎉';
+    }
+
+    /* ── Social login ── */
+    function socialLogin(provider) {
+      alert('Connecting to ' + provider + '… (integrate your OAuth SDK here)');
+    }
+
+    /* ── Switch to OTP mode ── */
+    function switchToOTP() {
+      document.getElementById('loginForm').style.display = 'none';
+      var otp = document.getElementById('otpGroup');
+      otp.style.display = 'flex';
+      otp.classList.add('show');
+      // Reset
+      document.getElementById('phoneGroup').classList.add('show');
+      document.getElementById('otpBoxGroup').style.display = 'none';
+    }
+
+    /* ── Back to login ── */
+    function backToLogin() {
+      document.getElementById('otpGroup').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+    }
+
+    /* ── Send OTP ── */
+    function sendOTP() {
+      var phone = document.getElementById('otpPhone').value.trim();
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        alert('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+      document.getElementById('otpPhoneDisplay').textContent = '+91 ' + phone;
+      document.getElementById('phoneGroup').classList.remove('show');
+      document.getElementById('phoneGroup').style.display = 'none';
+      var box = document.getElementById('otpBoxGroup');
+      box.style.display = 'flex';
+      // Focus first box
+      document.getElementById('otp1').focus();
+      startResendTimer();
+    }
+
+    /* ── Auto-advance for STANDALONE OTP form ── */
+    document.addEventListener('DOMContentLoaded', function() {
+      ['otp1','otp2','otp3','otp4'].forEach(function(id, i, arr) {
+        var inp = document.getElementById(id);
+        if (!inp) return;
+        inp.addEventListener('input', function() {
+          this.value = this.value.replace(/\D/g,'');
+          if (this.value.length === 1 && i < arr.length - 1) {
+            document.getElementById(arr[i+1]).focus();
+          }
+        });
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && i > 0) {
+            document.getElementById(arr[i-1]).focus();
+          }
+        });
+      });
+    });
+
+    /* ── Resend timer ── */
+    var resendTimer = null;
+    function startResendTimer() {
+      var secs = 30;
+      var btn = document.getElementById('resendBtn');
+      var display = document.getElementById('timerDisplay');
+      btn.disabled = true;
+      clearInterval(resendTimer);
+      resendTimer = setInterval(function() {
+        secs--;
+        display.textContent = secs + 's';
+        if (secs <= 0) {
+          clearInterval(resendTimer);
+          btn.disabled = false;
+          btn.textContent = 'Resend OTP';
+        }
+      }, 1000);
+    }
+
+    function resendOTP() {
+      alert('OTP resent!');
+      startResendTimer();
+    }
+
+    /* ── Verify OTP ── */
+    function verifyOTP() {
+      var code = ['otp1','otp2','otp3','otp4'].map(function(id) {
+        return document.getElementById(id).value;
+      }).join('');
+      if (code.length < 4) { alert('Please enter all 4 digits.'); return; }
+      // Demo: any 4 digits work
+      showSuccess();
+    }
+
+    /* ── Clear errors on input ── */
+    document.addEventListener('DOMContentLoaded', function() {
+      var loginEmail = document.getElementById('loginEmail');
+      var loginPass  = document.getElementById('loginPass');
+      if (loginEmail) loginEmail.addEventListener('input', function() {
+        this.classList.remove('error');
+        document.getElementById('emailErr').classList.remove('show');
+      });
+      if (loginPass) loginPass.addEventListener('input', function() {
+        this.classList.remove('error');
+        document.getElementById('passErr').classList.remove('show');
+      });
+    });
+  </script>
+
+</body>
+</html>
