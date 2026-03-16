@@ -1321,30 +1321,30 @@
       });
     }
   </script>
-  <script>
+  <!-- <script>
     function filterTx(btn, type) {
       // ... existing code ...
     }
-  </script>
+  </script> -->
 
   <!-- ✅ PASTE YOUR CODE HERE, wrapped in <script> tags -->
-  <script>
+  <!-- <script>
     let balance = 1000;
-    let transactions = [];
+    let transactions = []; -->
 
-    function vaaniSendMoney(name, amount) {
-      if (balance >= amount) {
-        balance -= amount;
-        transactions.push({ name: name, amount: amount });
-        alert("Payment successful");
-        document.getElementById("walletBalance").innerText = "₹" + balance;
-        loadTransactions();
-      } else {
-        alert("Insufficient balance");
-      }
-    }
+    <!-- // function vaaniSendMoney(name, amount) {
+    //   if (balance >= amount) {
+    //     balance -= amount;
+    //     transactions.push({ name: name, amount: amount });
+    //     alert("Payment successful");
+    //     document.getElementById("walletBalance").innerText = "₹" + balance;
+    //     loadTransactions();
+    //   } else {
+    //     alert("Insufficient balance");
+    //   }
+    // } -->
 
-    function loadTransactions() {
+    <!-- function loadTransactions() {
       const list = document.getElementById("txnList");
       list.innerHTML = "";
       transactions.slice().reverse().forEach(txn => {
@@ -1352,7 +1352,7 @@
         item.innerHTML = txn.name + " - ₹" + txn.amount;
         list.appendChild(item);
       });
-    }
-  </script>
+    } -->
+  <!-- </script> -->
 </body>
 </html>

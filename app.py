@@ -238,7 +238,9 @@ def pay():
         'type':     'sent',
         'status':   'completed',
     }
+    # transactions.append(txn)
     transactions.append(txn)
+    save_txn_to_db(txn_id, receiver, amount, lang)  # ← ADD THIS LINE
     session['balance'] = balance
 
     print(f'\n  PAYMENT: ₹{amount} → {receiver} | TXN: {txn_id} | Balance: ₹{balance}\n')
@@ -766,11 +768,128 @@ def demo_reset():
 
 
 # ════════════════════════════════════════════════════════
+#  GROK AI CHATBOT
+#  Get free API key: console.x.ai → API Keys → Create
+# ════════════════════════════════════════════════════════
+import requests as req_lib
+
+GROK_API_KEY = os.getenv('GROK_API_KEY', '')
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    data         = request.json
+    user_message = data.get('message', '').strip()
+    if not user_message:
+        return jsonify({'status': 'error', 'reply': 'Empty message'})
+
+    system_prompt = """You are Vaani, a friendly AI assistant for VaaniPay —
+a voice-based payment app for India. Keep answers short (2-3 sentences),
+friendly, and practical. Use simple language.
+Help users with: sending money by voice, UPI payments, security,
+12 Indian languages support, offline mode, troubleshooting."""
+
+    try:
+        response = req_lib.post(
+            'https://api.x.ai/v1/chat/completions',
+            headers={
+                'Authorization': f'Bearer {GROK_API_KEY}',
+                'Content-Type':  'application/json'
+            },
+            json={
+                'model':    'grok-beta',
+                'messages': [
+                    {'role': 'system', 'content': system_prompt},
+                    {'role': 'user',   'content': user_message}
+                ],
+                'max_tokens':  150,
+                'temperature': 0.7
+            },
+            timeout=10
+        )
+        if response.status_code == 200:
+            reply = response.json()['choices'][0]['message']['content']
+            return jsonify({'status': 'success', 'reply': reply})
+        else:
+            return jsonify({'status': 'success', 'reply': get_fallback(user_message)})
+    except Exception:
+        return jsonify({'status': 'success', 'reply': get_fallback(user_message)})
+
+
+def get_fallback(msg):
+    msg = msg.lower()
+    if any(w in msg for w in ['send','pay','transfer','bhejo']):
+        return "Tap the mic 🎤 and say 'Send 500 to Ramesh' in your language! Done in seconds."
+    if any(w in msg for w in ['safe','secure','fraud','encrypt']):
+        return "100% safe! ✅ VaaniPay uses 256-bit encryption and AI fraud detection on every payment."
+    if any(w in msg for w in ['lang','hindi','tamil','telugu','kannada']):
+        return "VaaniPay supports 12 languages 🌐 — Hindi, Tamil, Telugu, Bengali, Kannada, Marathi and more!"
+    if any(w in msg for w in ['offline','internet','2g','network']):
+        return "Yes! 📶 Payments save offline and auto-sync when internet returns. Zero transactions lost!"
+    if any(w in msg for w in ['hello','hi','namaste','hey']):
+        return "Namaste! 🙏 I'm Vaani. I can help you send money, check balance, or answer questions!"
+    return "VaaniPay makes digital payments simple for every Indian. Just speak in your language to pay! 😊"
+
+
+# ════════════════════════════════════════════════════════
+#  SQLITE DATABASE SETUP
+# ════════════════════════════════════════════════════════
+import sqlite3
+from datetime import datetime
+
+def get_db():
+    db = sqlite3.connect('vaanipay.db')
+    db.row_factory = sqlite3.Row
+    return db
+
+def init_db():
+    db = get_db()
+    db.executescript('''
+        CREATE TABLE IF NOT EXISTS txn_history (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            txn_id    TEXT    NOT NULL,
+            receiver  TEXT    NOT NULL,
+            amount    REAL    NOT NULL,
+            status    TEXT    DEFAULT "completed",
+            language  TEXT    DEFAULT "hi-IN",
+            timestamp TEXT    NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS offline_queue (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            receiver   TEXT    NOT NULL,
+            amount     REAL    NOT NULL,
+            language   TEXT    DEFAULT "hi-IN",
+            queued_at  TEXT    NOT NULL,
+            synced     INTEGER DEFAULT 0
+        );
+    ''')
+    db.commit()
+    db.close()
+    print('  SQLite database ready: vaanipay.db')
+
+# ════════════════════════════════════════════════════════
+#  SAVE TO SQLITE ON EVERY PAYMENT (patch existing /api/pay)
+# ════════════════════════════════════════════════════════
+def save_txn_to_db(txn_id, receiver, amount, language='hi-IN'):
+    try:
+        db = get_db()
+        db.execute(
+            'INSERT INTO txn_history (txn_id, receiver, amount, language, timestamp) VALUES (?,?,?,?,?)',
+            (txn_id, receiver, amount, language, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        )
+        db.commit()
+        db.close()
+    except Exception as e:
+        print(f'DB save error: {e}')
+
+# ════════════════════════════════════════════════════════
 #  START THE SERVER
 # ════════════════════════════════════════════════════════
 
+# if __name__ == '__main__':
+#     # Make sure the required folders exist
+#     os.makedirs('static/css',    exist_ok=True)
 if __name__ == '__main__':
-    # Make sure the required folders exist
+    init_db()   # ← ADD THIS LINE
     os.makedirs('static/css',    exist_ok=True)
     os.makedirs('static/js',     exist_ok=True)
     os.makedirs('static/assets', exist_ok=True)
