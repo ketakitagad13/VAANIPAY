@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VaaniPay Wallet</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>VaaniPay E-Wallet</h1>
+
+<p>
+Balance: <span id="walletBalance">₹1000</span>
+</p>
+
+<button onclick="vaaniSendMoney('Ramesh',100)">
+Send ₹100 to Ramesh
+</button>
+
+<button onclick="vaaniSendMoney('Priya',200)">
+Send ₹200 to Priya
+</button>
+
+<h3>Transactions</h3>
+
+<div id="txnList"></div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

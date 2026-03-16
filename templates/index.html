@@ -1,6 +1,18 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
+<head><head>
+  <!-- MUST be first — prevents dark/light flash on reload -->
+  <script>
+    (function() {
+      var saved = localStorage.getItem('vaanipay-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.body.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <!-- rest of your <head> continues... -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VaaniPay – Voice Payments for Everyone</title>
@@ -364,6 +376,127 @@
         </div>
         <!-- Online/Offline Status Badge -->
         <div id="statusBadge" class="status-badge">🟢 Online</div>
+        <!-- Dark / Light Mode Toggle -->
+<div class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+  <div class="tt-track">
+    <div class="tt-thumb">
+      <span class="tt-icon tt-sun">☀️</span>
+      <span class="tt-icon tt-moon">🌙</span>
+    </div>
+  </div>
+</div>
+<!-- Language Selector Dropdown -->
+<div class="lang-selector" id="langSelector">
+  <button class="ls-btn" id="lsBtn" aria-label="Select language">
+    <span class="ls-flag" id="lsFlag">🇮🇳</span>
+    <span class="ls-current" id="lsCurrent">English</span>
+    <svg class="ls-arrow" id="lsArrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+  <div class="ls-dropdown" id="lsDropdown">
+    <div class="ls-search-wrap">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="ls-search" id="lsSearch" placeholder="Search language..." autocomplete="off" />
+    </div>
+    <div class="ls-list" id="lsList">
+      <div class="ls-item active" data-lang="en-IN" data-name="English" data-native="English (India)" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">English</span>
+          <span class="ls-item-native">English (India)</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="hi-IN" data-name="Hindi" data-native="हिन्दी" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Hindi</span>
+          <span class="ls-item-native">हिन्दी</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="bn-IN" data-name="Bengali" data-native="বাংলা" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Bengali</span>
+          <span class="ls-item-native">বাংলা</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="ta-IN" data-name="Tamil" data-native="தமிழ்" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Tamil</span>
+          <span class="ls-item-native">தமிழ்</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="te-IN" data-name="Telugu" data-native="తెలుగు" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Telugu</span>
+          <span class="ls-item-native">తెలుగు</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="ml-IN" data-name="Malayalam" data-native="മലയാളം" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Malayalam</span>
+          <span class="ls-item-native">മലയാളം</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="kn-IN" data-name="Kannada" data-native="ಕನ್ನಡ" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Kannada</span>
+          <span class="ls-item-native">ಕನ್ನಡ</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="mr-IN" data-name="Marathi" data-native="मराठी" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Marathi</span>
+          <span class="ls-item-native">मराठी</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="gu-IN" data-name="Gujarati" data-native="ગુજરાતી" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Gujarati</span>
+          <span class="ls-item-native">ગુજરાતી</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="pa-IN" data-name="Punjabi" data-native="ਪੰਜਾਬੀ" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Punjabi</span>
+          <span class="ls-item-native">ਪੰਜਾਬੀ</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="or-IN" data-name="Odia" data-native="ଓଡ଼ିଆ" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Odia</span>
+          <span class="ls-item-native">ଓଡ଼ିଆ</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ls-item" data-lang="ur-IN" data-name="Urdu" data-native="اردو" data-flag="🇮🇳">
+        <span class="ls-item-flag">🇮🇳</span>
+        <div class="ls-item-text">
+          <span class="ls-item-name">Urdu</span>
+          <span class="ls-item-native">اردو</span>
+        </div>
+        <svg class="ls-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
         <button class="burger" id="burger" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
@@ -1185,6 +1318,39 @@
           next = next.nextElementSibling;
         }
         badge.style.display = hasVisible ? '' : 'none';
+      });
+    }
+  </script>
+  <script>
+    function filterTx(btn, type) {
+      // ... existing code ...
+    }
+  </script>
+
+  <!-- ✅ PASTE YOUR CODE HERE, wrapped in <script> tags -->
+  <script>
+    let balance = 1000;
+    let transactions = [];
+
+    function vaaniSendMoney(name, amount) {
+      if (balance >= amount) {
+        balance -= amount;
+        transactions.push({ name: name, amount: amount });
+        alert("Payment successful");
+        document.getElementById("walletBalance").innerText = "₹" + balance;
+        loadTransactions();
+      } else {
+        alert("Insufficient balance");
+      }
+    }
+
+    function loadTransactions() {
+      const list = document.getElementById("txnList");
+      list.innerHTML = "";
+      transactions.slice().reverse().forEach(txn => {
+        const item = document.createElement("div");
+        item.innerHTML = txn.name + " - ₹" + txn.amount;
+        list.appendChild(item);
       });
     }
   </script>
