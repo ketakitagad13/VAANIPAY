@@ -3,30 +3,353 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VaaniPay â€” Voice Payments for Everyone</title>
+  <title>VaaniPay – Voice Payments for Everyone</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <!-- âœ… Link to external CSS file -->
-  <!-- <link rel="stylesheet" href="css/style.css" /> -->
-   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 
+  <!-- About + Analytics inline styles -->
+  <style>
+    /* ══════════════════════════════════
+       ABOUT SECTION
+    ══════════════════════════════════ */
+    .about-sec {
+      padding: 96px 0 80px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-sec::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -180px;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(46,176,80,0.07) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    @media(max-width:860px){ .about-inner{ grid-template-columns:1fr; gap:40px; } }
+
+    .about-text .chip { margin-bottom: 14px; }
+    .about-h {
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: #0d1f12;
+      line-height: 1.2;
+      margin: 0 0 18px;
+    }
+    .about-h span { color: var(--g1, #2eb050); }
+    .about-p {
+      font-size: 1.05rem;
+      color: #4b5563;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+    .about-vals {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 32px;
+    }
+    @media(max-width:520px){ .about-vals{ grid-template-columns:1fr; } }
+    .aval {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      border: 1.5px solid #e8f5ed;
+      border-radius: 14px;
+      background: #f8fdf9;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .aval:hover { border-color: var(--g1,#2eb050); box-shadow: 0 4px 16px rgba(46,176,80,0.1); }
+    .aval-ic {
+      width: 36px; height: 36px;
+      background: #e8f7ed;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+    .aval-t { font-weight: 700; color: #0d1f12; font-size: 0.9rem; margin-bottom: 3px; }
+    .aval-d { font-size: 0.8rem; color: #6b7280; line-height: 1.4; }
+
+    /* Right side: Stats cards */
+    .about-vis {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .about-stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .about-stat {
+      background: linear-gradient(135deg, #f0fdf4 0%, #e8f7ed 100%);
+      border: 1.5px solid #c6e9d0;
+      border-radius: 18px;
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .about-stat.dark {
+      background: linear-gradient(135deg, #0d1f12 0%, #163320 100%);
+      border-color: #2eb050;
+    }
+    .about-stat.dark .ast-n { color: #2eb050; }
+    .about-stat.dark .ast-l { color: #9ca3af; }
+    .ast-n { font-size: 2rem; font-weight: 800; color: var(--g1,#2eb050); line-height: 1; margin-bottom: 6px; }
+    .ast-l { font-size: 0.8rem; color: #6b7280; font-weight: 500; }
+    .about-quote {
+      background: #0d1f12;
+      border-radius: 18px;
+      padding: 24px 26px;
+      color: #fff;
+      position: relative;
+    }
+    .about-quote::before {
+      content: '"';
+      position: absolute;
+      top: 10px; left: 20px;
+      font-size: 4rem;
+      color: var(--g1,#2eb050);
+      line-height: 1;
+      font-family: Georgia, serif;
+      opacity: 0.4;
+    }
+    .aq-text { font-size: 0.95rem; line-height: 1.65; color: #d1fae5; margin-bottom: 14px; padding-top: 20px; }
+    .aq-attr { display: flex; align-items: center; gap: 10px; }
+    .aq-av {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2eb050, #22c55e);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: #fff;
+    }
+    .aq-nm { font-weight: 600; font-size: 0.85rem; color: #fff; }
+    .aq-role { font-size: 0.75rem; color: #6ee7b7; }
+
+    /* Team row */
+    .about-team {
+      margin-top: 56px;
+    }
+    .about-team-h {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0d1f12;
+      margin-bottom: 32px;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px,1fr));
+      gap: 20px;
+    }
+    .team-card {
+      text-align: center;
+      padding: 28px 18px 22px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 20px;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .team-card:hover { border-color: var(--g1,#2eb050); box-shadow: 0 8px 24px rgba(46,176,80,0.12); transform: translateY(-4px); }
+    .tm-av {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; color: #fff;
+    }
+    .tm-nm { font-size: 1rem; font-weight: 700; color: #0d1f12; margin-bottom: 4px; }
+    .tm-role { font-size: 0.78rem; color: #6b7280; margin-bottom: 8px; }
+    .tm-tag {
+      display: inline-block;
+      background: #e8f7ed;
+      color: var(--g1,#2eb050);
+      font-size: 0.7rem; font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* ══════════════════════════════════
+       ANALYTICS SECTION
+    ══════════════════════════════════ */
+    .analy-sec {
+      padding: 96px 0 80px;
+      background: #f8fdf9;
+      position: relative;
+      overflow: hidden;
+    }
+    .analy-sec::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(46,176,80,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .analy-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media(max-width:900px){ .analy-inner{ grid-template-columns:1fr; } }
+
+    /* Left summary cards */
+    .analy-summary { display: flex; flex-direction: column; gap: 16px; }
+    .analy-card {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 20px 22px;
+      display: flex; align-items: center; gap: 16px;
+      transition: box-shadow 0.2s;
+    }
+    .analy-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); }
+    .analy-card.green { border-color: #bbf7d0; background: #f0fdf4; }
+    .analy-card.amber { border-color: #fed7aa; background: #fff7ed; }
+    .analy-card.blue  { border-color: #bfdbfe; background: #eff6ff; }
+    .ac-ic {
+      width: 46px; height: 46px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 1.3rem;
+    }
+    .analy-card.green .ac-ic { background: #dcfce7; }
+    .analy-card.amber .ac-ic { background: #ffedd5; }
+    .analy-card.blue  .ac-ic { background: #dbeafe; }
+    .ac-val { font-size: 1.6rem; font-weight: 800; color: #0d1f12; line-height: 1; }
+    .ac-lbl { font-size: 0.78rem; color: #6b7280; margin-top: 3px; }
+    .ac-chg { font-size: 0.75rem; font-weight: 600; margin-top: 2px; }
+    .up { color: #16a34a; }
+    .dn { color: #dc2626; }
+
+    /* Mini bar chart */
+    .analy-chart {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 4px;
+    }
+    .chart-title { font-size: 0.85rem; font-weight: 700; color: #374151; margin-bottom: 14px; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 60px; }
+    .bar {
+      flex: 1;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, #2eb050, #22c55e);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      position: relative;
+    }
+    .bar:hover { opacity: 1; }
+    .bar.hi { opacity: 1; background: linear-gradient(180deg, #16a34a, #2eb050); }
+    .bar-labels { display: flex; gap: 6px; margin-top: 6px; }
+    .bar-labels span { flex: 1; text-align: center; font-size: 0.6rem; color: #9ca3af; }
+
+    /* Right: Transaction table */
+    .tx-panel {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+    .tx-panel-hdr {
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .tx-panel-title { font-size: 1rem; font-weight: 700; color: #0d1f12; }
+    .tx-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tf {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1.5px solid #e5e7eb;
+      background: #fff;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tf.active, .tf:hover { background: var(--g1,#2eb050); color: #fff; border-color: var(--g1,#2eb050); }
+    .tx-list { max-height: 420px; overflow-y: auto; }
+    .tx-list::-webkit-scrollbar { width: 4px; }
+    .tx-list::-webkit-scrollbar-thumb { background: #d1fae5; border-radius: 4px; }
+    .tx-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 22px;
+      border-bottom: 1px solid #f9fafb;
+      transition: background 0.15s;
+      cursor: default;
+    }
+    .tx-row:hover { background: #f8fdf9; }
+    .tx-row:last-child { border-bottom: none; }
+    .tx-emoji {
+      width: 42px; height: 42px;
+      border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem; flex-shrink: 0;
+    }
+    .tx-info { flex: 1; min-width: 0; }
+    .tx-nm { font-size: 0.88rem; font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tx-sub { font-size: 0.74rem; color: #9ca3af; margin-top: 2px; }
+    .tx-right { text-align: right; flex-shrink: 0; }
+    .tx-amt { font-size: 0.92rem; font-weight: 700; }
+    .tx-amt.out { color: #dc2626; }
+    .tx-amt.in  { color: #16a34a; }
+    .tx-status {
+      font-size: 0.65rem; font-weight: 600;
+      padding: 2px 7px; border-radius: 10px; margin-top: 3px;
+      display: inline-block;
+    }
+    .tx-status.ok  { background: #dcfce7; color: #15803d; }
+    .tx-status.pend{ background: #fef9c3; color: #a16207; }
+    .tx-status.fail{ background: #fee2e2; color: #b91c1c; }
+    .tx-panel-foot {
+      padding: 14px 22px;
+      border-top: 1px solid #f3f4f6;
+      text-align: center;
+    }
+    .tx-more {
+      font-size: 0.82rem; color: var(--g1,#2eb050); font-weight: 600;
+      text-decoration: none; cursor: pointer;
+    }
+    .tx-more:hover { text-decoration: underline; }
+
+    /* Month badges in list */
+    .tx-month-badge {
+      padding: 8px 22px 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      background: #fafafa;
+      border-bottom: 1px solid #f3f4f6;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
        NAVBAR
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <nav id="nav">
     <div class="wrap">
       <div class="nav-row">
-
-        <!-- âœ… REAL LOGO IMAGE from assets/logo.jpeg -->
         <a href="#home" class="nav-logo-link">
           <img src="icon.jpeg" alt="VaaniPay Logo" class="nav-logo-img" />
         </a>
-
-        <!-- Desktop Nav Links -->
         <ul class="nav-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#how">How It Works</a></li>
@@ -34,14 +357,10 @@
           <li><a href="#security">Security</a></li>
           <li><a href="#about">About</a></li>
         </ul>
-
-        <!-- Desktop Buttons -->
         <div class="nav-right">
           <a href="login.html" class="nav-login">Login</a>
           <a href="login.html" class="btn btn-green nav-cta">Get Started</a>
         </div>
-
-        <!-- Hamburger for mobile -->
         <button class="burger" id="burger" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
@@ -51,30 +370,26 @@
 
   <!-- Mobile Menu Overlay -->
   <div class="mob-menu" id="mobMenu">
-    <button class="mob-x" id="mobX" aria-label="Close menu">âœ•</button>
+    <button class="mob-x" id="mobX" aria-label="Close menu">✕</button>
     <a href="#features" class="mob-link">Features</a>
     <a href="#how" class="mob-link">How It Works</a>
+    <a href="#analy" class="mob-link">Analytics</a>
     <a href="#security" class="mob-link">Security</a>
     <a href="#about" class="mob-link">About</a>
     <a href="#" class="btn btn-green" style="margin-top:12px">Get Started Free</a>
   </div>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
        HERO SECTION
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <section class="hero" id="home">
     <div class="hero-blob-a"></div>
     <div class="hero-blob-b"></div>
-
-    <!-- Bottom wave divider -->
     <svg class="hero-wave" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#ffffff"/>
     </svg>
-
     <div class="wrap">
       <div class="hero-inner">
-
-        <!-- Left: Text Content -->
         <div class="hero-text">
           <div class="hero-badge">
             <div class="badge-dot"></div>
@@ -84,7 +399,7 @@
             Digital Payments <span class="hl">Made Simple</span> for <span class="ho">Everyone</span>
           </h1>
           <p class="body-lg hero-sub">
-            Just speak â€” VaaniPay turns your voice into instant, secure digital payments. No complex menus. No UPI IDs to memorise. Built for every Indian.
+            Just speak – VaaniPay turns your voice into instant, secure digital payments. No complex menus. No UPI IDs to memorise. Built for every Indian.
           </p>
           <div class="hero-btns">
             <a href="#" class="btn btn-green">
@@ -103,32 +418,26 @@
               <div class="stat-l">Languages</div>
             </div>
             <div class="stat-item">
-              <div class="stat-n">â‚¹480<em>Cr</em></div>
+              <div class="stat-n">₹480<em>Cr</em></div>
               <div class="stat-l">Transactions</div>
             </div>
           </div>
         </div>
-
-        <!-- Right: Phone Mockup -->
         <div class="hero-vis">
-          <!-- Floating chip 1 -->
           <div class="fc fc1">
-            <div class="fc-ic" style="background:#e8f7ed">ðŸŽ¤</div>
+            <div class="fc-ic" style="background:#e8f7ed">🎤</div>
             <div>
               <div class="fc-lbl">Voice Command</div>
-              <div class="fc-val">"Send â‚¹500 to Ramesh"</div>
+              <div class="fc-val">"Send ₹500 to Ramesh"</div>
             </div>
           </div>
-          <!-- Floating chip 2 -->
           <div class="fc fc2">
-            <div class="fc-ic" style="background:#e8f7ed">âœ…</div>
+            <div class="fc-ic" style="background:#e8f7ed">✅</div>
             <div>
               <div class="fc-lbl">Payment Sent!</div>
-              <div class="fc-val" style="color:var(--g1)">â‚¹500 to Ramesh</div>
+              <div class="fc-val" style="color:var(--g1)">₹500 to Ramesh</div>
             </div>
           </div>
-
-          <!-- Phone body -->
           <div class="phone">
             <div class="phone-bar"></div>
             <div class="phone-top">
@@ -136,12 +445,11 @@
               <div class="phone-av">RS</div>
             </div>
             <div class="p-bal-lbl">Total Balance</div>
-            <div class="p-bal">â‚¹12,450</div>
+            <div class="p-bal">₹12,450</div>
             <div class="p-up">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-              +â‚¹2,100 this week
+              +₹2,100 this week
             </div>
-            <!-- Mic area -->
             <div class="p-mic-area">
               <div class="p-mic-btn" id="phoneMicBtn">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -154,60 +462,55 @@
               <div class="p-mic-t">Tap to Speak</div>
               <div class="p-mic-s">Say "Send money to..."</div>
             </div>
-            <!-- Transactions -->
             <div class="p-txs">
               <div class="p-tx">
-                <div class="p-tx-ic" style="background:#e8f7ed">ðŸŒ¾</div>
+                <div class="p-tx-ic" style="background:#e8f7ed">🌾</div>
                 <div class="p-tx-info">
                   <div class="p-tx-nm">Ramesh Kumar</div>
                   <div class="p-tx-tm">Today, 10:24 AM</div>
                 </div>
-                <div class="p-tx-am out">âˆ’â‚¹500</div>
+                <div class="p-tx-am out">−₹500</div>
               </div>
               <div class="p-tx">
-                <div class="p-tx-ic" style="background:#fff4eb">ðŸª</div>
+                <div class="p-tx-ic" style="background:#fff4eb">🪙</div>
                 <div class="p-tx-info">
                   <div class="p-tx-nm">Kirana Store</div>
                   <div class="p-tx-tm">Yesterday, 6:12 PM</div>
                 </div>
-                <div class="p-tx-am out">âˆ’â‚¹180</div>
+                <div class="p-tx-am out">−₹180</div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
        FEATURES SECTION
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <section class="features" id="features">
     <div class="wrap">
       <div class="tc rv">
         <span class="chip">Why VaaniPay?</span>
         <h2 class="h2" style="margin:12px 0 14px">Payments Built for<br>Real People</h2>
-        <p class="body-lg">No jargon. No complexity. Fast, simple payments that work for everyone â€” including first-time smartphone users.</p>
+        <p class="body-lg">No jargon. No complexity. Fast, simple payments that work for everyone – including first-time smartphone users.</p>
       </div>
       <div class="feat-grid">
-
         <div class="feat-card rv d1">
           <div class="feat-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10a7 7 0 0 1-14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
           </div>
           <div class="feat-title">Voice-Based Payments</div>
-          <p class="feat-desc">Say "Send 200 rupees to Suresh" â€” no forms, no UPI IDs. Works naturally in your own words and dialect.</p>
+          <p class="feat-desc">Say "Send 200 rupees to Suresh" – no forms, no UPI IDs. Works naturally in your own words and dialect.</p>
         </div>
-
         <div class="feat-card o rv d2">
           <div class="feat-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           </div>
           <div class="feat-title">Multilingual Interface</div>
-          <p class="feat-desc">Speak in Hindi, Tamil, Telugu, Bengali, Kannada, Marathi, Gujarati, Punjabi and more â€” 12 languages supported.</p>
+          <p class="feat-desc">Speak in Hindi, Tamil, Telugu, Bengali, Kannada, Marathi, Gujarati, Punjabi and more – 12 languages supported.</p>
         </div>
-
         <div class="feat-card rv d3">
           <div class="feat-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -215,7 +518,6 @@
           <div class="feat-title">Secure Transactions</div>
           <p class="feat-desc">OTP verification, bank-grade 256-bit encryption, and real-time AI fraud detection on every single payment.</p>
         </div>
-
         <div class="feat-card o rv d4">
           <div class="feat-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6l11 6 11-6"/><path d="M1 18V6l11 6 11-6v12"/></svg>
@@ -223,20 +525,19 @@
           <div class="feat-title">Works on Low Internet</div>
           <p class="feat-desc">Saves payments offline automatically and syncs when you reconnect. No lost transactions, even on 2G.</p>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
        HOW IT WORKS
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <section class="how" id="how">
     <div class="wrap">
       <div class="tc rv">
         <span class="chip">Simple Steps</span>
         <h2 class="h2" style="margin:12px 0 14px">Pay Anyone in 3 Easy Steps</h2>
-        <p class="body-lg">No bank visits. No paperwork. From speaking a command to money delivered â€” under 10 seconds.</p>
+        <p class="body-lg">No bank visits. No paperwork. From speaking a command to money delivered – under 10 seconds.</p>
       </div>
       <div class="steps">
         <div class="step hi rv d1">
@@ -267,47 +568,293 @@
     </div>
   </section>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
        LANGUAGE MARQUEE STRIP
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-  <div class="lang-sec" id="about">
+  ══════════════════════════════════ -->
+  <div class="lang-sec">
     <div style="overflow:hidden">
       <div class="lang-inner" id="langStrip">
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ à¤¹à¤¿à¤¨à¥à¤¦à¥€</div>
-        <div class="lang-pill">ðŸŽ¤ Tamil Â· à®¤à®®à®¿à®´à¯</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Telugu Â· à°¤à±†à°²à±à°—à±</div>
-        <div class="lang-pill">ðŸŽ¤ Bengali Â· à¦¬à¦¾à¦‚à¦²à¦¾</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Kannada Â· à²•à²¨à³à²¨à²¡</div>
-        <div class="lang-pill">ðŸŽ¤ Marathi Â· à¤®à¤°à¤¾à¤ à¥€</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Gujarati Â· àª—à«àªœàª°àª¾àª¤à«€</div>
-        <div class="lang-pill">ðŸŽ¤ Punjabi Â· à¨ªà©°à¨œà¨¾à¨¬à©€</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Odia Â· à¬“à¬¡à¬¼à¬¿à¬†</div>
-        <div class="lang-pill">ðŸŽ¤ Malayalam Â· à´®à´²à´¯à´¾à´³à´‚</div>
-        <!-- Duplicate for seamless loop -->
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ à¤¹à¤¿à¤¨à¥à¤¦à¥€</div>
-        <div class="lang-pill">ðŸŽ¤ Tamil Â· à®¤à®®à®¿à®´à¯</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Telugu Â· à°¤à±†à°²à±à°—à±</div>
-        <div class="lang-pill">ðŸŽ¤ Bengali Â· à¦¬à¦¾à¦‚à¦²à¦¾</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Kannada Â· à²•à²¨à³à²¨à²¡</div>
-        <div class="lang-pill">ðŸŽ¤ Marathi Â· à¤®à¤°à¤¾à¤ à¥€</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Gujarati Â· àª—à«àªœàª°àª¾àª¤à«€</div>
-        <div class="lang-pill">ðŸŽ¤ Punjabi Â· à¨ªà©°à¨œà¨¾à¨¬à©€</div>
-        <div class="lang-pill">ðŸ‡®ðŸ‡³ Odia Â· à¬“à¨¡à¨¼à¨¿à¨†</div>
-        <div class="lang-pill">ðŸŽ¤ Malayalam Â· à´®à´²à´¯à´¾à´³à´‚</div>
+        <div class="lang-pill">🇮🇳 हिन्दी</div>
+        <div class="lang-pill">🎤 Tamil · தமிழ்</div>
+        <div class="lang-pill">🇮🇳 Telugu · తెలుగు</div>
+        <div class="lang-pill">🎤 Bengali · বাংলা</div>
+        <div class="lang-pill">🇮🇳 Kannada · ಕನ್ನಡ</div>
+        <div class="lang-pill">🎤 Marathi · मराठी</div>
+        <div class="lang-pill">🇮🇳 Gujarati · ગુજરાતી</div>
+        <div class="lang-pill">🎤 Punjabi · ਪੰਜਾਬੀ</div>
+        <div class="lang-pill">🇮🇳 Odia · ଓଡ଼ିଆ</div>
+        <div class="lang-pill">🎤 Malayalam · മലയാളം</div>
+        <div class="lang-pill">🇮🇳 हिन्दी</div>
+        <div class="lang-pill">🎤 Tamil · தமிழ்</div>
+        <div class="lang-pill">🇮🇳 Telugu · తెలుగు</div>
+        <div class="lang-pill">🎤 Bengali · বাংলা</div>
+        <div class="lang-pill">🇮🇳 Kannada · ಕನ್ನಡ</div>
+        <div class="lang-pill">🎤 Marathi · मराठी</div>
+        <div class="lang-pill">🇮🇳 Gujarati · ગુજરાતી</div>
+        <div class="lang-pill">🎤 Punjabi · ਪੰਜਾਬੀ</div>
+        <div class="lang-pill">🇮🇳 Odia · ଓଡ଼ିଆ</div>
+        <div class="lang-pill">🎤 Malayalam · മലയാളം</div>
       </div>
     </div>
   </div>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
+       ANALYTICS SECTION  (NEW)
+  ══════════════════════════════════ -->
+  <section class="analy-sec" id="analy">
+    <div class="wrap">
+      <div class="tc rv">
+        <span class="chip">Transaction Analytics</span>
+        <h2 class="h2" style="margin:12px 0 14px">Your Payment History<br>at a Glance</h2>
+        <p class="body-lg">Track every rupee — where it went, when it moved, and how your spending patterns look over time.</p>
+      </div>
+
+      <div class="analy-inner" style="margin-top:48px">
+
+        <!-- Left: Summary + mini chart -->
+        <div class="analy-summary rv d1">
+
+          <div class="analy-card green">
+            <div class="ac-ic">💸</div>
+            <div>
+              <div class="ac-val">₹28,340</div>
+              <div class="ac-lbl">Total Sent (This Month)</div>
+              <div class="ac-chg up">↑ 12% vs last month</div>
+            </div>
+          </div>
+
+          <div class="analy-card amber">
+            <div class="ac-ic">📥</div>
+            <div>
+              <div class="ac-val">₹41,200</div>
+              <div class="ac-lbl">Total Received (This Month)</div>
+              <div class="ac-chg up">↑ 8% vs last month</div>
+            </div>
+          </div>
+
+          <div class="analy-card blue">
+            <div class="ac-ic">🔢</div>
+            <div>
+              <div class="ac-val">47</div>
+              <div class="ac-lbl">Transactions This Month</div>
+              <div class="ac-chg dn">↓ 3 vs last month</div>
+            </div>
+          </div>
+
+          <!-- Mini weekly bar chart -->
+          <div class="analy-chart rv d2">
+            <div class="chart-title">Weekly Spend — March 2025</div>
+            <div class="bar-chart">
+              <div class="bar" style="height:38%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:42%"></div>
+              <div class="bar" style="height:70%"></div>
+              <div class="bar hi" style="height:88%"></div>
+              <div class="bar" style="height:61%"></div>
+              <div class="bar" style="height:47%"></div>
+            </div>
+            <div class="bar-labels">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Full transaction history -->
+        <div class="tx-panel rv d2">
+          <div class="tx-panel-hdr">
+            <div class="tx-panel-title">Transaction History</div>
+            <div class="tx-filters">
+              <button class="tf active" onclick="filterTx(this,'all')">All</button>
+              <button class="tf" onclick="filterTx(this,'sent')">Sent</button>
+              <button class="tf" onclick="filterTx(this,'received')">Received</button>
+            </div>
+          </div>
+
+          <div class="tx-list" id="txList">
+
+            <!-- March 2025 -->
+            <div class="tx-month-badge">March 2025</div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#fef3c7">🌾</div>
+              <div class="tx-info">
+                <div class="tx-nm">Ramesh Kumar</div>
+                <div class="tx-sub">16 Mar · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹500</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#fce7f3">🪙</div>
+              <div class="tx-info">
+                <div class="tx-nm">Kirana Store</div>
+                <div class="tx-sub">15 Mar · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹180</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="received">
+              <div class="tx-emoji" style="background:#d1fae5">💼</div>
+              <div class="tx-info">
+                <div class="tx-nm">Salary Credit</div>
+                <div class="tx-sub">14 Mar · Bank Transfer</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt in">+₹38,000</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#ede9fe">🏠</div>
+              <div class="tx-info">
+                <div class="tx-nm">House Rent — Landlord</div>
+                <div class="tx-sub">12 Mar · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹12,000</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#ffedd5">⚡</div>
+              <div class="tx-info">
+                <div class="tx-nm">Electricity Bill — BESCOM</div>
+                <div class="tx-sub">11 Mar · Voice · BBPS</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹940</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#fef9c3">🛒</div>
+              <div class="tx-info">
+                <div class="tx-nm">BigBasket Order</div>
+                <div class="tx-sub">10 Mar · UPI · Auto</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹1,450</div>
+                <span class="tx-status pend">Processing</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="received">
+              <div class="tx-emoji" style="background:#d1fae5">👨‍👩‍👦</div>
+              <div class="tx-info">
+                <div class="tx-nm">Priya Sharma</div>
+                <div class="tx-sub">9 Mar · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt in">+₹2,500</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#fee2e2">🏥</div>
+              <div class="tx-info">
+                <div class="tx-nm">Apollo Pharmacy</div>
+                <div class="tx-sub">7 Mar · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹680</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <!-- February 2025 -->
+            <div class="tx-month-badge">February 2025</div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#e0e7ff">📚</div>
+              <div class="tx-info">
+                <div class="tx-nm">Anand — School Fees</div>
+                <div class="tx-sub">28 Feb · Voice · NEFT</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹4,200</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#fef3c7">🚌</div>
+              <div class="tx-info">
+                <div class="tx-nm">KSRTC Bus Pass</div>
+                <div class="tx-sub">25 Feb · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹350</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="received">
+              <div class="tx-emoji" style="background:#d1fae5">💼</div>
+              <div class="tx-info">
+                <div class="tx-nm">Salary Credit</div>
+                <div class="tx-sub">14 Feb · Bank Transfer</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt in">+₹38,000</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#fce7f3">📱</div>
+              <div class="tx-info">
+                <div class="tx-nm">Jio Recharge</div>
+                <div class="tx-sub">5 Feb · Voice · UPI</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹399</div>
+                <span class="tx-status ok">Completed</span>
+              </div>
+            </div>
+
+            <div class="tx-row" data-type="sent">
+              <div class="tx-emoji" style="background:#ede9fe">🍛</div>
+              <div class="tx-info">
+                <div class="tx-nm">Swiggy Order</div>
+                <div class="tx-sub">3 Feb · UPI · App</div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amt out">−₹320</div>
+                <span class="tx-status fail">Failed</span>
+              </div>
+            </div>
+
+          </div><!-- /tx-list -->
+
+          <div class="tx-panel-foot">
+            <a class="tx-more" href="#">View all transactions →</a>
+          </div>
+        </div><!-- /tx-panel -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════
        SECURITY SECTION
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <section class="security" id="security">
     <div class="wrap">
       <div class="sec-inner">
         <div>
           <span class="chip sec-chip">Trust &amp; Safety</span>
           <h2 class="sec-h">Your Money is<br>Always Safe</h2>
-          <p class="sec-sub">Built with the same security standards used by India's top banks â€” protecting every transaction, every time.</p>
+          <p class="sec-sub">Built with the same security standards used by India's top banks – protecting every transaction, every time.</p>
           <div class="sec-items">
             <div class="sec-item rv d1">
               <div class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
@@ -319,7 +866,7 @@
             </div>
             <div class="sec-item rv d3">
               <div class="sec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-              <div><div class="sec-it">256-bit Encryption</div><div class="sec-id">Bank-grade AES-256 encryption secures all data in transit and at rest â€” same standard as RBI-regulated banks.</div></div>
+              <div><div class="sec-it">256-bit Encryption</div><div class="sec-id">Bank-grade AES-256 encryption secures all data in transit and at rest – same standard as RBI-regulated banks.</div></div>
             </div>
           </div>
         </div>
@@ -345,9 +892,155 @@
     </div>
   </section>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
+       ABOUT SECTION  (NEW)
+  ══════════════════════════════════ -->
+  <section class="about-sec" id="about">
+    <div class="wrap">
+      <div class="about-inner">
+
+        <!-- Left: Story -->
+        <div class="about-text rv d1">
+          <span class="chip">Our Story</span>
+          <h2 class="about-h">We Built VaaniPay Because<br><span>India Deserves Better</span></h2>
+          <p class="about-p">
+            In 2021, our founders watched a street vendor in Varanasi struggle for 10 minutes trying to accept a digital payment — fumbling with a phone, unable to read English menus, asking younger customers for help. That moment sparked VaaniPay.
+          </p>
+          <p class="about-p">
+            We're a team of engineers, linguists, and designers from across India — Bengaluru, Chennai, Patna, Jaipur — united by one belief: <strong>every Indian, regardless of literacy, language, or location, deserves access to the digital economy.</strong>
+          </p>
+          <p class="about-p">
+            Today, VaaniPay serves 2.4 million users across 22 states, from Nagaland to Kerala, processing over ₹480 crore in transactions. Our voice-first, multilingual platform has become the payment method of choice for farmers, street vendors, domestic workers, and first-generation smartphone users.
+          </p>
+
+          <div class="about-vals">
+            <div class="aval rv d2">
+              <div class="aval-ic">🌱</div>
+              <div>
+                <div class="aval-t">Inclusive by Design</div>
+                <div class="aval-d">Built for users who've never touched a bank app.</div>
+              </div>
+            </div>
+            <div class="aval rv d3">
+              <div class="aval-ic">🗣️</div>
+              <div>
+                <div class="aval-t">Voice First</div>
+                <div class="aval-d">Your language, your dialect, your pace.</div>
+              </div>
+            </div>
+            <div class="aval rv d4">
+              <div class="aval-ic">🔒</div>
+              <div>
+                <div class="aval-t">Security Always</div>
+                <div class="aval-d">Zero-compromise protection on every transaction.</div>
+              </div>
+            </div>
+            <div class="aval rv d5">
+              <div class="aval-ic">📡</div>
+              <div>
+                <div class="aval-t">Rural Ready</div>
+                <div class="aval-d">Works reliably on 2G networks in remote areas.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Stats + quote -->
+        <div class="about-vis rv d2">
+          <div class="about-stat-row">
+            <div class="about-stat">
+              <div class="ast-n">2021</div>
+              <div class="ast-l">Founded in Bengaluru</div>
+            </div>
+            <div class="about-stat dark">
+              <div class="ast-n">22</div>
+              <div class="ast-l">States Served</div>
+            </div>
+            <div class="about-stat dark">
+              <div class="ast-n">2.4M</div>
+              <div class="ast-l">Active Users</div>
+            </div>
+            <div class="about-stat">
+              <div class="ast-n">12</div>
+              <div class="ast-l">Languages</div>
+            </div>
+          </div>
+
+          <div class="about-quote rv d3">
+            <p class="aq-text">
+              "Mera beta ne mujhe VaaniPay diya. Abhi main Hindi mein bolke paisa bhej deti hoon. Koi tension nahi. Bahut easy hai." <br><em style="font-size:0.8rem;color:#6ee7b7">("My son introduced me to VaaniPay. Now I send money by speaking Hindi. No tension. Very easy.")</em>
+            </p>
+            <div class="aq-attr">
+              <div class="aq-av">SK</div>
+              <div>
+                <div class="aq-nm">Savitri Kushwaha</div>
+                <div class="aq-role">Vegetable vendor, Lucknow · VaaniPay user since 2022</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:16px;padding:20px 22px;" class="rv d4">
+            <div style="font-size:0.8rem;font-weight:700;color:#166534;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em">Recognition &amp; Milestones</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:#374151">
+                <span style="color:#2eb050;font-size:1rem">🏆</span> NASSCOM Emerge 50 — Top Fintech 2023
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:#374151">
+                <span style="font-size:1rem">🇮🇳</span> Featured in India's G20 Digital Economy Report
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:#374151">
+                <span style="color:#2eb050;font-size:1rem">💡</span> iSPIRT Inclusion Impact Award 2024
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:#374151">
+                <span style="font-size:1rem">📰</span> Featured in Times of India, The Hindu, Forbes India
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team -->
+      <div class="about-team rv">
+        <div class="about-team-h">Meet the Team Behind VaaniPay</div>
+        <div class="team-grid">
+          <div class="team-card rv d1">
+            <div class="tm-av" style="background:linear-gradient(135deg,#2eb050,#16a34a)">AK</div>
+            <div class="tm-nm">Arjun Krishnamurthy</div>
+            <div class="tm-role">Co-Founder &amp; CEO</div>
+            <div class="tm-tag">Ex-NPCI · IIT Madras</div>
+          </div>
+          <div class="team-card rv d2">
+            <div class="tm-av" style="background:linear-gradient(135deg,#f59e0b,#d97706)">PM</div>
+            <div class="tm-nm">Priya Mehta</div>
+            <div class="tm-role">Co-Founder &amp; CTO</div>
+            <div class="tm-tag">Ex-Google · IIT Bombay</div>
+          </div>
+          <div class="team-card rv d3">
+            <div class="tm-av" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">RN</div>
+            <div class="tm-nm">Rajan Nair</div>
+            <div class="tm-role">VP — Linguistics &amp; AI</div>
+            <div class="tm-tag">IISc Bengaluru</div>
+          </div>
+          <div class="team-card rv d4">
+            <div class="tm-av" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">DS</div>
+            <div class="tm-nm">Deepa Subramaniam</div>
+            <div class="tm-role">Head of Design</div>
+            <div class="tm-tag">Ex-Flipkart · NID</div>
+          </div>
+          <div class="team-card rv d5">
+            <div class="tm-av" style="background:linear-gradient(135deg,#ec4899,#be185d)">VG</div>
+            <div class="tm-nm">Vikram Gupta</div>
+            <div class="tm-role">Head of Partnerships</div>
+            <div class="tm-tag">Ex-Paytm · IIM-A</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════
        CTA SECTION
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <section class="cta-sec">
     <div class="wrap">
       <div class="cta-card rv">
@@ -363,21 +1056,21 @@
         </div>
         <p class="cta-note">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          No credit card required &nbsp;Â·&nbsp; Works on 2G/3G &nbsp;Â·&nbsp; 12 languages supported
+          No credit card required &nbsp;·&nbsp; Works on 2G/3G &nbsp;·&nbsp; 12 languages supported
         </p>
       </div>
     </div>
   </section>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  <!-- ══════════════════════════════════
        FOOTER
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  ══════════════════════════════════ -->
   <footer>
     <div class="wrap">
       <div class="ft-grid">
         <div class="ft-brand">
           <img src="icon.jpeg" alt="VaaniPay" class="ft-icon-img" />
-          <p class="ft-tagline">Making digital payments accessible for every Indian â€” one voice command at a time.</p>
+          <p class="ft-tagline">Making digital payments accessible for every Indian – one voice command at a time.</p>
           <div class="social-row">
             <a href="#" class="soc-a" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
             <a href="#" class="soc-a" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
@@ -398,7 +1091,7 @@
         <div>
           <div class="ft-col-h">Company</div>
           <ul class="ft-links">
-            <li><a href="#">About Us</a></li>
+            <li><a href="#about">About Us</a></li>
             <li><a href="#">Careers</a></li>
             <li><a href="#">Press Kit</a></li>
             <li><a href="#">Privacy Policy</a></li>
@@ -409,11 +1102,11 @@
           <div class="ft-col-h">Contact</div>
           <div class="ft-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>support@vaanipay.in</div>
           <div class="ft-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.53 2 2 0 0 1 3.6 1.35h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l1.01-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 14z"/></svg>1800-123-VAANI (toll free)</div>
-          <div class="ft-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru Â· Mumbai Â· Delhi</div>
+          <div class="ft-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Bengaluru · Mumbai · Delhi</div>
         </div>
       </div>
       <div class="ft-bot">
-        <span>Â© 2024 VaaniPay Technologies Pvt. Ltd. All rights reserved.</span>
+        <span>© 2024 VaaniPay Technologies Pvt. Ltd. All rights reserved.</span>
         <div class="ft-bot-links">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
@@ -424,11 +1117,10 @@
     </div>
   </footer>
 
-  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-       CHATBOT (Fixed Bottom-Right)
-  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <!-- ══════════════════════════════════
+       CHATBOT
+  ══════════════════════════════════ -->
   <div class="cb-fab" id="cbFab">
-    <!-- Chat Window -->
     <div class="cb-win" id="cbWin">
       <div class="cb-hdr">
         <div class="cb-av">
@@ -441,7 +1133,7 @@
       </div>
       <div class="cb-msgs" id="cbMsgs">
         <div class="msg bot">
-          <div class="bub">Namaste! ðŸ™ I'm Vaani. How can I help you with your payments today?</div>
+          <div class="bub">Namaste! 🙏 I'm Vaani. How can I help you with your payments today?</div>
           <div class="msg-t">Just now</div>
         </div>
       </div>
@@ -458,7 +1150,6 @@
         </button>
       </div>
     </div>
-    <!-- Toggle button -->
     <button class="cb-toggle" id="cbBtn" aria-label="Toggle chat">
       <svg class="ci-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <svg class="ci-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -466,8 +1157,33 @@
     <div class="cb-notif" id="cbNotif">1</div>
   </div>
 
-  <!-- âœ… Link to external JS file â€” ALWAYS at bottom of body -->
   <script src="js/script.js"></script>
 
+  <!-- Transaction filter script -->
+  <script>
+    function filterTx(btn, type) {
+      // Update active button
+      document.querySelectorAll('.tf').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      // Show/hide rows
+      document.querySelectorAll('#txList .tx-row').forEach(function(row) {
+        if (type === 'all' || row.dataset.type === type) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      // Hide month badges if no visible rows follow them
+      document.querySelectorAll('.tx-month-badge').forEach(function(badge) {
+        var next = badge.nextElementSibling;
+        var hasVisible = false;
+        while(next && !next.classList.contains('tx-month-badge')) {
+          if(next.classList.contains('tx-row') && next.style.display !== 'none') hasVisible = true;
+          next = next.nextElementSibling;
+        }
+        badge.style.display = hasVisible ? '' : 'none';
+      });
+    }
+  </script>
 </body>
 </html>
