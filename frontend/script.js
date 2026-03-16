@@ -342,3 +342,52 @@
     el.textContent = el.textContent.replace(/\d{4}/, year);
   });
 })();
+/* ══════════════════════════════════════════════════════════════
+   9. ONLINE / OFFLINE STATUS BADGE
+   Polls /api/status every 7 seconds.
+   Shows 🟢 Online or 🔴 Offline in the navbar.
+   Falls back gracefully if the endpoint doesn't exist yet.
+══════════════════════════════════════════════════════════════ */
+(function initStatusBadge() {
+  const badge = document.getElementById('statusBadge');
+  if (!badge) return;
+
+  function showBadge(text, isOffline) {
+    badge.textContent = text;
+    if (isOffline) {
+      badge.classList.add('offline');
+    } else {
+      badge.classList.remove('offline');
+    }
+  }
+
+  function checkStatus() {
+    fetch('/api/status', {
+      method: 'GET',
+      cache: 'no-cache',          // always a fresh check, never cached
+      signal: AbortSignal.timeout(4000) // timeout after 4s so it doesn't hang
+    })
+      .then(function(res) {
+        if (res.ok) {
+          showBadge('🟢 Online', false);
+        } else {
+          // Server responded but with an error code (e.g. 503)
+          showBadge('🔴 Offline', true);
+        }
+      })
+      .catch(function() {
+        // Network failure or endpoint doesn't exist yet
+        showBadge('🔴 Offline', true);
+      });
+  }
+
+  // Run immediately on load, then every 7 seconds
+  checkStatus();
+  setInterval(checkStatus, 7000);
+
+  // Also hook into the browser's built-in online/offline events
+  // as a fast, instant fallback (no waiting for the next poll)
+  window.addEventListener('online',  function() { showBadge('🟢 Online',  false); });
+  window.addEventListener('offline', function() { showBadge('🔴 Offline', true);  });
+
+})();

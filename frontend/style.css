@@ -803,3 +803,25 @@ footer { background: #070f09; padding: 68px 0 30px; }
   .cb-fab { bottom: 18px; right: 18px; }
   .cb-win { width: calc(100vw - 32px); right: 0; }
 }
+/* ══════════════════════════════════
+   ONLINE / OFFLINE STATUS BADGE
+══════════════════════════════════ */
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  color: #15803d;
+  white-space: nowrap;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.status-badge.offline {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+@media(max-width: 768px) {
+  .status-badge { display: none; } /* hide on mobile to save space */
+}
