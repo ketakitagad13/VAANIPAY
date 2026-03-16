@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VaaniPay â€” Voice Payments for Everyone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- âœ… Link to external CSS file -->
+  <!-- <link rel="stylesheet" href="css/style.css" /> -->
+   <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       NAVBAR
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <nav id="nav">
+    <div class="wrap">
+      <div class="nav-row">
+
+        <!-- âœ… REAL LOGO IMAGE from assets/logo.jpeg -->
+        <a href="#home" class="nav-logo-link">
+          <img src="icon.jpeg" alt="VaaniPay Logo" class="nav-logo-img" />
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#security">Security</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+
+        <!-- Desktop Buttons -->
+        <div class="nav-right">
+          <a href="#" class="nav-login">Login</a>
+          <a href="#" class="btn btn-green nav-cta">Get Started</a>
+        </div>
+
+        <!-- Hamburger for mobile -->
+        <button class="burger" id="burger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mob-menu" id="mobMenu">
+    <button class="mob-x" id="mobX" aria-label="Close menu">âœ•</button>
+    <a href="#features" class="mob-link">Features</a>
+    <a href="#how" class="mob-link">How It Works</a>
+    <a href="#security" class="mob-link">Security</a>
+    <a href="#about" class="mob-link">About</a>
+    <a href="#" class="btn btn-green" style="margin-top:12px">Get Started Free</a>
+  </div>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       HERO SECTION
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <section class="hero" id="home">
+    <div class="hero-blob-a"></div>
+    <div class="hero-blob-b"></div>
+
+    <!-- Bottom wave divider -->
+    <svg class="hero-wave" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#ffffff"/>
+    </svg>
+
+    <div class="wrap">
+      <div class="hero-inner">
+
+        <!-- Left: Text Content -->
+        <div class="hero-text">
+          <div class="hero-badge">
+            <div class="badge-dot"></div>
+            Now live in 12 Indian languages
+          </div>
+          <h1 class="hero-title">
+            Digital Payments <span class="hl">Made Simple</span> for <span class="ho">Everyone</span>
+          </h1>
+          <p class="body-lg hero-sub">
+            Just speak â€” VaaniPay turns your voice into instant, secure digital payments. No complex menus. No UPI IDs to memorise. Built for every Indian.
+          </p>
+          <div class="hero-btns">
+            <a href="#" class="btn btn-green">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              Get Started Free
+            </a>
+            <a href="#how" class="btn btn-outline">See How It Works</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-n">2.4<em>M+</em></div>
+              <div class="stat-l">Active users</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-n">12<em>+</em></div>
+              <div class="stat-l">Languages</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-n">â‚¹480<em>Cr</em></div>
+              <div class="stat-l">Transactions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Phone Mockup -->
+        <div class="hero-vis">
+          <!-- Floating chip 1 -->
+          <div class="fc fc1">
+            <div class="fc-ic" style="background:#e8f7ed">ðŸŽ¤</div>
+            <div>
+              <div class="fc-lbl">Voice Command</div>
+              <div class="fc-val">"Send â‚¹500 to Ramesh"</div>
+            </div>
+          </div>
+          <!-- Floating chip 2 -->
+          <div class="fc fc2">
+            <div class="fc-ic" style="background:#e8f7ed">âœ…</div>
+            <div>
+              <div class="fc-lbl">Payment Sent!</div>
+              <div class="fc-val" style="color:var(--g1)">â‚¹500 to Ramesh</div>
+            </div>
+          </div>
+
+          <!-- Phone body -->
+          <div class="phone">
+            <div class="phone-bar"></div>
+            <div class="phone-top">
+              <img src="assets/logo.jpeg" alt="VaaniPay" class="phone-logo" />
+              <div class="phone-av">RS</div>
+            </div>
+            <div class="p-bal-lbl">Total Balance</div>
+            <div class="p-bal">â‚¹12,450</div>
+            <div class="p-up">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              +â‚¹2,100 this week
+            </div>
+            <!-- Mic area -->
+            <div class="p-mic-area">
+              <div class="p-mic-btn" id="phoneMicBtn">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10a7 7 0 0 1-14 0"/>
+                  <line x1="12" y1="19" x2="12" y2="22"/>
+                  <line x1="8" y1="22" x2="16" y2="22"/>
+                </svg>
+              </div>
+              <div class="p-mic-t">Tap to Speak</div>
+              <div class="p-mic-s">Say "Send money to..."</div>
+            </div>
+            <!-- Transactions -->
+            <div class="p-txs">
