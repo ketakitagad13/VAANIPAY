@@ -227,3 +227,118 @@
 
     // Simulate typing delay for bot reply
     setTimeout(function () {
+      addMessage(getReply(msg), false);
+    }, 620);
+  }
+
+  // â”€â”€ Toggle chatbot open/close â”€â”€
+  function toggleChat() {
+    cbWin.classList.toggle('on');
+    cbBtn.classList.toggle('on');
+    cbNotif.style.display = 'none'; // Hide notification dot
+  }
+
+  // â”€â”€ Event listeners â”€â”€
+  cbBtn.addEventListener('click', toggleChat);
+
+  cbSendBtn.addEventListener('click', function () {
+    sendMessage();
+  });
+
+  cbInp.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  // Quick-reply buttons (uses data-q attribute from HTML)
+  cbQuick.addEventListener('click', function (e) {
+    const btn = e.target.closest('.qb');
+    if (btn) sendMessage(btn.dataset.q);
+  });
+
+})();
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   6. PHONE MIC BUTTON DEMO ANIMATION
+   Clicking mic in phone mockup
+   shows a small demo interaction
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+(function initPhoneMic() {
+  const micBtn = document.getElementById('phoneMicBtn');
+  if (!micBtn) return;
+
+  const micText = micBtn.closest('.p-mic-area')?.querySelector('.p-mic-t');
+  const micSub  = micBtn.closest('.p-mic-area')?.querySelector('.p-mic-s');
+
+  const demoSteps = [
+    { t: 'Listening...', s: '"Send 500 rupees to Priya"' },
+    { t: 'Processing...', s: 'Extracting name & amount' },
+    { t: 'Confirming...', s: 'Receiver: Priya | â‚¹500' },
+    { t: 'Tap to Speak', s: 'Say "Send money to..."' }
+  ];
+
+  let step = 0;
+  let timer = null;
+
+  micBtn.addEventListener('click', function () {
+    clearTimeout(timer);
+    step = 0;
+    runDemo();
+  });
+
+  function runDemo() {
+    if (step >= demoSteps.length) return;
+    const s = demoSteps[step];
+    if (micText) micText.textContent = s.t;
+    if (micSub)  micSub.textContent  = s.s;
+    step++;
+    if (step < demoSteps.length) {
+      timer = setTimeout(runDemo, 1200);
+    }
+  }
+})();
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   7. ACTIVE NAV LINK HIGHLIGHTING
+   Highlights the correct nav link
+   based on scroll position
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+(function initActiveNav() {
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', function () {
+    let currentId = '';
+
+    sections.forEach(function (section) {
+      const sTop = section.offsetTop - 120;
+      if (window.scrollY >= sTop) {
+        currentId = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(function (link) {
+      link.style.color = '';
+      link.style.background = '';
+      if (link.getAttribute('href') === '#' + currentId) {
+        link.style.color = 'var(--g1)';
+        link.style.background = 'var(--g3)';
+      }
+    });
+  });
+})();
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   8. YEAR AUTO-UPDATE in footer
+   So copyright year is always current
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+(function updateYear() {
+  const yearEls = document.querySelectorAll('.ft-bot span');
+  const year = new Date().getFullYear();
+
+  yearEls.forEach(function (el) {
+    el.textContent = el.textContent.replace(/\d{4}/, year);
+  });
+})();
