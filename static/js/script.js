@@ -592,28 +592,28 @@ function parseCommand(text) {
     setMicUI('Listening...', 'Speak now');
   };
 
-  /* Step 4 — onresult fires when speech detected */
-  recognition.onresult = function(event) {
-    var transcript = event.results[0][0].transcript;
-    setMicUI('Heard:', '"' + transcript + '"');
+  // /* Step 4 — onresult fires when speech detected */
+  // recognition.onresult = function(event) {
+  //   var transcript = event.results[0][0].transcript;
+  //   setMicUI('Heard:', '"' + transcript + '"');
 
-    /* Pass to Section 7 parser */
-    var parsed = parseCommand(transcript);
+  //   /* Pass to Section 7 parser */
+  //   var parsed = parseCommand(transcript);
 
-    if (parsed) {
-      /* Step 4a — parsing succeeded, show confirm card */
-      setMicUI('Confirm below ↓', '₹' + parsed.amount + ' to ' + parsed.to);
-      showConfirmCard(
-        parsed,
-        function() { sendPayment(parsed); },   /* user tapped Send */
-        function() { resetMicUI(); }            /* user tapped Cancel */
-      );
-    } else {
-      /* Step 4b — could not parse, show error */
-      setMicUI('Try again', 'Say "Send 500 to Ramesh"');
-      setTimeout(resetMicUI, 3000);
-    }
-  };
+  //   if (parsed) {
+  //     /* Step 4a — parsing succeeded, show confirm card */
+  //     setMicUI('Confirm below ↓', '₹' + parsed.amount + ' to ' + parsed.to);
+  //     showConfirmCard(
+  //       parsed,
+  //       function() { sendPayment(parsed); },   /* user tapped Send */
+  //       function() { resetMicUI(); }            /* user tapped Cancel */
+  //     );
+  //   } else {
+  //     /* Step 4b — could not parse, show error */
+  //     setMicUI('Try again', 'Say "Send 500 to Ramesh"');
+  //     setTimeout(resetMicUI, 3000);
+  //   }
+  // };
 
   /* Step 4 — onresult fires when speech detected */
   recognition.onresult = function(event) {
@@ -1251,7 +1251,7 @@ document.getElementById("walletBalance").innerText =
 // Send money
 async function vaaniSendMoney(name, amount){
 
-const res = await fetch("/api/send",{
+const res = await fetch("/api/pay",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"

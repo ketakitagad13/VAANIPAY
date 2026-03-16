@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VaaniPay — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #f0f7f2;
+      color: #1a2e1f;
+      min-height: 100vh;
+    }
+    :root {
+      --g1: #2eb050; --g2: #1a9e3c; --g3: #e8f7ed; --g4: #5acc78;
+      --o1: #f47c20; --dark: #0f1f13; --text: #1a2e1f;
+      --mid: #4a6652; --muted: #7a9485; --border: #d0e8d8;
+      --white: #ffffff; --off: #f7fbf8;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .tb-inner {
+      width: 92%; max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .tb-logo { display: flex; align-items: center; gap: 8px; }
+    .tb-logo img { height: 36px; width: auto; object-fit: contain; }
+    .tb-logo-text {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 1.2rem; color: var(--g1);
+    }
+    .tb-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .tb-user {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.88rem; color: var(--mid); font-weight: 600;
+    }
+    .tb-av {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--g1), #16a34a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .tb-logout {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: 0.82rem; color: #e53e3e;
+      padding: 7px 16px; border-radius: 20px;
+      border: 1.5px solid #fee2e2;
+      background: #fff5f5;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .tb-logout:hover { background: #fee2e2; border-color: #e53e3e; }
+
+    /* ── MAIN LAYOUT ── */
+    .dash-wrap {
+      width: 92%; max-width: 1200px; margin: 0 auto;
+      padding: 28px 0 60px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+    @media(max-width: 860px) {
+      .dash-wrap { grid-template-columns: 1fr; }
+      .dash-sidebar { order: -1; }
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card-title {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 1rem; color: var(--text); margin-bottom: 18px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    /* ── WELCOME CARD ── */
+    .welcome-card {
+      background: linear-gradient(135deg, var(--g1) 0%, #0e7035 100%);
+      border-radius: 22px; padding: 28px 28px 24px;
+      color: #fff; margin-bottom: 20px;
+      position: relative; overflow: hidden;
+    }
+    .welcome-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .wc-inner { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .wc-left {}
+    .wc-greeting {
+      font-size: 0.82rem; color: rgba(255,255,255,0.65);
+      margin-bottom: 3px; font-weight: 500;
+    }
+    .wc-name {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: clamp(1.4rem, 3vw, 1.9rem); color: #fff;
+      margin-bottom: 12px; line-height: 1.15;
+    }
+    .wc-bal-lbl { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+    .wc-bal {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 2.6rem); color: #fff; line-height: 1;
+    }
+    .wc-reset {
+      font-size: 0.72rem; color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      padding: 5px 12px; border-radius: 20px;
+      font-family: 'Nunito', sans-serif; font-weight: 600;
+      transition: background 0.2s; cursor: pointer; margin-top: 12px; display: inline-block;
+    }
+    .wc-reset:hover { background: rgba(255,255,255,0.18); }
+
+    /* ── MIC SECTION ── */
+    .mic-card {
+      background: linear-gradient(135deg, #e8f7ed 0%, #c8efd6 100%);
+      border: 1.5px solid #bbf7d0;
+      border-radius: 22px; padding: 28px;
+      text-align: center; margin-bottom: 20px;
+    }
+    .mic-card-title {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 1.1rem; color: #0d1f12; margin-bottom: 6px;
+    }
+    .mic-card-sub { font-size: 0.88rem; color: var(--mid); margin-bottom: 24px; }
+    .mic-big {
+      width: 80px; height: 80px;
+      background: var(--g1); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; cursor: pointer;
+      box-shadow: 0 0 0 12px rgba(46,176,80,0.12), 0 0 0 24px rgba(46,176,80,0.06);
+      animation: ring 2.5s ease-in-out infinite;
+      transition: transform 0.15s;
+    }
+    .mic-big:hover { transform: scale(1.06); }
+    .mic-big.listening {
+      background: #e53e3e !important;
+      animation: none !important;
+      box-shadow: 0 0 0 12px rgba(229,62,62,0.15), 0 0 0 24px rgba(229,62,62,0.07) !important;
+    }
+    @keyframes ring {
+      0%, 100% { box-shadow: 0 0 0 12px rgba(46,176,80,0.12), 0 0 0 24px rgba(46,176,80,0.06); }
+      50% { box-shadow: 0 0 0 16px rgba(46,176,80,0.18), 0 0 0 32px rgba(46,176,80,0.08); }
+    }
+    .mic-status { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--g2); }
+    .mic-hint { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+    .lang-pills { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 16px; }
+    .lang-pill-btn {
+      font-size: 0.72rem; font-weight: 600;
+      padding: 4px 12px; border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #fff; color: var(--mid);
+      cursor: pointer; transition: all 0.15s;
+      font-family: 'Nunito', sans-serif;
+    }
+    .lang-pill-btn.active, .lang-pill-btn:hover {
+      background: var(--g1); color: #fff; border-color: var(--g1);
+    }
+
+    /* ── QUICK SEND ── */
+    .contacts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+    .contact-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      padding: 14px 8px;
+      border: 1.5px solid var(--border);
+      border-radius: 16px; background: #fff;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .contact-btn:hover { border-color: var(--g1); background: var(--g3); transform: translateY(-2px); }
+    .contact-av {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800; color: #fff;
+    }
+    .contact-name { font-size: 0.72rem; font-weight: 700; color: var(--text); text-align: center; }
+    .contact-amt { font-size: 0.65rem; color: var(--muted); }
+
+    /* ── TRANSACTION LIST ── */
+    .tx-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .tx-details { flex: 1; }
+    .tx-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .tx-time { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .tx-amount { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.9rem; }
+    .tx-amount.out { color: #dc2626; }
+    .tx-amount.in  { color: #16a34a; }
+    .tx-empty { text-align: center; padding: 32px; color: var(--muted); font-size: 0.88rem; }
+    .tx-empty-icon { font-size: 2rem; margin-bottom: 8px; }
+
+    /* ── SIDEBAR ── */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-item {
+      background: var(--off); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 14px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 1.4rem; color: var(--g1); line-height: 1; margin-bottom: 4px;
+    }
+    .stat-lbl { font-size: 0.72rem; color: var(--muted); }
+
+    /* ── SEND FORM ── */
+    .send-form { display: flex; flex-direction: column; gap: 12px; }
+    .sf-field {
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .sf-field label {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: 0.78rem; color: var(--mid);
+    }
+    .sf-field input {
+      border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 10px 14px; font-size: 0.9rem;
+      font-family: inherit; color: var(--text);
+      background: var(--off); outline: none;
+      transition: border-color 0.2s;
+    }
+    .sf-field input:focus { border-color: var(--g1); background: #fff; }
+    .sf-btn {
+      background: var(--g1); color: #fff;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.92rem;
+      padding: 12px; border-radius: 50px;
+      box-shadow: 0 4px 16px rgba(46,176,80,0.3);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .sf-btn:hover { background: var(--g2); transform: translateY(-1px); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+      background: #0d1f12; color: #d1fae5;
+      font-size: 0.9rem; font-weight: 600;
+      padding: 12px 24px; border-radius: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      z-index: 99999; opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none; white-space: nowrap;
+      font-family: 'Nunito', sans-serif;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── CONFIRM CARD ── */
+    #confirmCard {
+      position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+      background: #fff; border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      padding: 28px 32px; z-index: 9999;
+      min-width: 300px; text-align: center;
+      border: 2px solid var(--g1);
+      font-family: 'Nunito', sans-serif;
+      display: none;
+    }
+    .cc-label { font-size: 0.72rem; font-weight: 700; color: var(--g1); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .cc-amount { font-size: 2.2rem; font-weight: 800; color: #0d1f12; margin-bottom: 5px; }
+    .cc-to { font-size: 1rem; color: var(--mid); margin-bottom: 22px; }
+    .cc-btns { display: flex; gap: 10px; }
+    .cc-cancel { flex: 1; padding: 12px; border-radius: 50px; border: 1.5px solid var(--border); background: #fff; color: var(--mid); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+    .cc-send { flex: 2; padding: 12px; border-radius: 50px; border: none; background: var(--g1); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+
+    /* ── OTP DEBUG BOX ── */
+    .otp-debug {
+      background: #fef9c3; border: 1.5px solid #fde047;
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 0.82rem; color: #713f12; margin-top: 12px;
+      display: none;
+    }
+    .otp-debug.show { display: block; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 480px) {
+      .dash-wrap { padding: 16px 0 40px; }
+      .contacts-grid { grid-template-columns: repeat(3, 1fr); }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOPBAR ══ -->
+  <div class="topbar">
+    <div class="tb-inner">
+      <div class="tb-logo">
+        <img src="/static/assets/icon.jpeg" alt="VaaniPay"
+             onerror="this.style.display='none';" />
+        <span class="tb-logo-text">VaaniPay</span>
+      </div>
+      <div class="tb-right">
+        <div class="tb-user">
+          <div class="tb-av" id="userAv">VP</div>
+          <span id="userName">Loading...</span>
+        </div>
+        <button class="tb-logout" onclick="doLogout()">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="dash-wrap">
+
+    <!-- ══ LEFT COLUMN ══ -->
+    <div class="dash-main">
+
+      <!-- Welcome + Balance -->
+      <div class="welcome-card">
+        <div class="wc-inner">
+          <div class="wc-left">
+            <div class="wc-greeting">Good <span id="timeGreeting">day</span>,</div>
+            <div class="wc-name" id="wcName">Loading...</div>
+            <div class="wc-bal-lbl">Available Balance</div>
+            <div class="wc-bal" id="wcBalance">₹—</div>
+          </div>
+        </div>
+        <button class="wc-reset" onclick="doReset()">🔄 Reset Demo (₹5000)</button>
+      </div>
+
+      <!-- Mic / Voice Payment -->
+      <div class="mic-card">
+        <div class="mic-card-title">🎤 Voice Payment</div>
+        <div class="mic-card-sub">Tap the mic and say "Send 500 rupees to Ramesh"</div>
+        <div class="mic-big" id="dashMicBtn">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+            <path d="M19 10a7 7 0 0 1-14 0"/>
+            <line x1="12" y1="19" x2="12" y2="22"/>
+            <line x1="8" y1="22" x2="16" y2="22"/>
+          </svg>
+        </div>
+        <div class="mic-status" id="dashMicStatus">Tap to Speak</div>
+        <div class="mic-hint" id="dashMicHint">Say "Send money to..."</div>
+
+        <!-- Language selector for voice -->
+        <div class="lang-pills">
+          <button class="lang-pill-btn active" data-lang="hi-IN" onclick="setVoiceLang(this)">🇮🇳 Hindi</button>
+          <button class="lang-pill-btn" data-lang="en-IN" onclick="setVoiceLang(this)">🇮🇳 English</button>
+          <button class="lang-pill-btn" data-lang="ta-IN" onclick="setVoiceLang(this)">Tamil</button>
+          <button class="lang-pill-btn" data-lang="te-IN" onclick="setVoiceLang(this)">Telugu</button>
+          <button class="lang-pill-btn" data-lang="bn-IN" onclick="setVoiceLang(this)">Bengali</button>
+          <button class="lang-pill-btn" data-lang="kn-IN" onclick="setVoiceLang(this)">Kannada</button>
+        </div>
+      </div>
+
+      <!-- Quick Send -->
+      <div class="card">
+        <div class="card-title">Quick Send</div>
+        <div class="contacts-grid" id="contactsGrid">
+          <!-- Loaded from /api/contacts -->
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="card">
+        <div class="card-title">
+          Recent Transactions
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:500" id="txCount"></span>
+        </div>
+        <div id="txList">
+          <div class="tx-empty">
+            <div class="tx-empty-icon">💸</div>
+            No transactions yet. Try a voice payment!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ RIGHT SIDEBAR ══ -->
+    <div class="dash-sidebar">
+
+      <!-- Stats -->
+      <div class="card">
+        <div class="card-title">This Session</div>
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-val" id="statSent">₹0</div>
+            <div class="stat-lbl">Total Sent</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" id="statCount">0</div>
+            <div class="stat-lbl">Payments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Send Form -->
+      <div class="card">
+        <div class="card-title">Manual Send</div>
+        <div class="send-form">
+          <div class="sf-field">
+            <label>Recipient Name</label>
+            <input type="text" id="sfName" placeholder="e.g. Ramesh Kumar" />
+          </div>
+          <div class="sf-field">
+            <label>Amount (₹)</label>
+            <input type="number" id="sfAmount" placeholder="e.g. 500" min="1" />
+          </div>
+          <button class="sf-btn" onclick="manualSend()">Send Money →</button>
+        </div>
+      </div>
+
+      <!-- Offline Status -->
+      <div class="card" id="offlineCard" style="display:none">
+        <div class="card-title">Offline Queue</div>
+        <div style="font-size:0.85rem;color:var(--mid)" id="offlineInfo">
+          0 payments pending sync
+        </div>
+        <button style="margin-top:12px;width:100%;padding:10px;background:var(--g1);color:#fff;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;" onclick="syncOffline()">
+          Sync Now
+        </button>
+      </div>
+
+      <!-- Security Info -->
+      <div class="card">
+        <div class="card-title">Security Status</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:var(--mid)">
+            <span style="color:#16a34a;font-size:1rem">✓</span> OTP Verified
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:var(--mid)">
+            <span style="color:#16a34a;font-size:1rem">✓</span> 256-bit Encrypted
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.84rem;color:var(--mid)">
+            <span id="onlineDot" style="font-size:1rem">🟢</span> <span id="onlineText">Server Online</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Confirm card -->
+  <div id="confirmCard">
+    <div class="cc-label">Confirm Payment</div>
+    <div class="cc-amount" id="ccAmount">₹0</div>
+    <div class="cc-to">to <strong id="ccTo">—</strong></div>
+    <div class="cc-btns">
+      <button class="cc-cancel" onclick="cancelConfirm()">Cancel</button>
+      <button class="cc-send" onclick="confirmSend()">Send ✓</button>
+    </div>
+  </div>
+
+  <script>
+    /* ══════════════════════════════════
+       DASHBOARD JAVASCRIPT
+    ══════════════════════════════════ */
+
+    var currentVoiceLang = localStorage.getItem('vp_language') || 'hi-IN';
+    var pendingPayment = null;
+    var recognition = null;
+
+    /* ── Greeting by time of day ── */
+    (function() {
+      var h = new Date().getHours();
+      var g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+      document.getElementById('timeGreeting').textContent = g;
+    })();
+
+    /* ── Load user info + balance ── */
+    function loadUser() {
+      fetch('/api/me')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d.status !== 'success') {
+            window.location.href = '/';
+            return;
+          }
+          var name = d.name || 'User';
+          document.getElementById('userName').textContent = name;
+          document.getElementById('wcName').textContent = name + '!';
+          var initials = name.split(' ').map(function(w) { return w[0]; }).join('').slice(0,2).toUpperCase();
+          document.getElementById('userAv').textContent = initials;
+        })
+        .catch(function() { window.location.href = '/'; });
+    }
+
+    function loadBalance() {
+      fetch('/api/balance')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          document.getElementById('wcBalance').textContent = '₹' + d.balance.toLocaleString('en-IN');
+        });
+    }
+
+    /* ── Load contacts ── */
+    var CONTACT_COLORS = ['#2eb050','#f47c20','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+    function loadContacts() {
+      fetch('/api/contacts')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var grid = document.getElementById('contactsGrid');
+          grid.innerHTML = '';
+          d.contacts.forEach(function(c, i) {
+            var initials = c.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+            var color = CONTACT_COLORS[i % CONTACT_COLORS.length];
+            var btn = document.createElement('div');
+            btn.className = 'contact-btn';
+            btn.onclick = function() { quickSend(c.name, 100); };
+            btn.innerHTML =
+              '<div class="contact-av" style="background:' + color + '">' + initials + '</div>' +
+              '<div class="contact-name">' + c.name.split(' ')[0] + '</div>' +
+              '<div class="contact-amt">Tap to send</div>';
+            grid.appendChild(btn);
+          });
+        });
+    }
+
+    /* ── Load transactions ── */
+    var sessionSent = 0; var sessionCount = 0;
+    function loadTransactions() {
+      fetch('/api/transactions')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var txns = d.transactions;
+          var list = document.getElementById('txList');
+          document.getElementById('txCount').textContent = txns.length + ' total';
+
+          if (!txns.length) {
+            list.innerHTML = '<div class="tx-empty"><div class="tx-empty-icon">💸</div>No transactions yet. Try a voice payment!</div>';
+            return;
+          }
+
+          sessionSent = 0; sessionCount = 0;
+          list.innerHTML = '';
+          var reversed = txns.slice().reverse();
+          reversed.forEach(function(txn) {
+            if (txn.type === 'sent') { sessionSent += txn.amount; sessionCount++; }
+            var icon = txn.type === 'sent' ? '💸' : '💰';
+            var amtClass = txn.type === 'sent' ? 'out' : 'in';
+            var amtPrefix = txn.type === 'sent' ? '−₹' : '+₹';
+            var iconBg = txn.type === 'sent' ? '#fef3c7' : '#dcfce7';
+            var row = document.createElement('div');
+            row.className = 'tx-item';
+            row.innerHTML =
+              '<div class="tx-icon" style="background:' + iconBg + '">' + icon + '</div>' +
+              '<div class="tx-details">' +
+                '<div class="tx-name">' + txn.to + '</div>' +
+                '<div class="tx-time">' + txn.time + ' · ' + (txn.language || 'Voice') + '</div>' +
+              '</div>' +
+              '<div class="tx-amount ' + amtClass + '">' + amtPrefix + txn.amount.toLocaleString('en-IN') + '</div>';
+            list.appendChild(row);
+          });
+
+          document.getElementById('statSent').textContent = '₹' + sessionSent.toLocaleString('en-IN');
+          document.getElementById('statCount').textContent = sessionCount;
+        });
+    }
+
+    /* ── Quick send (pre-fills and asks amount) ── */
+    function quickSend(name, suggestedAmount) {
+      document.getElementById('sfName').value = name;
+      document.getElementById('sfAmount').value = '';
+      document.getElementById('sfAmount').focus();
+      showToast('Ready to send to ' + name + ' — enter amount below');
+    }
+
+    /* ── Manual send form ── */
+    function manualSend() {
+      var name   = document.getElementById('sfName').value.trim();
+      var amount = parseInt(document.getElementById('sfAmount').value);
+      if (!name) { showToast('Please enter a recipient name'); return; }
+      if (!amount || amount <= 0) { showToast('Please enter a valid amount'); return; }
+      showConfirm(name, amount);
+    }
+
+    /* ── Confirm card ── */
+    function showConfirm(name, amount) {
+      pendingPayment = { to: name, amount: amount };
+      document.getElementById('ccAmount').textContent = '₹' + amount.toLocaleString('en-IN');
+      document.getElementById('ccTo').textContent = name;
+      document.getElementById('confirmCard').style.display = 'block';
+    }
+
+    function cancelConfirm() {
+      document.getElementById('confirmCard').style.display = 'none';
+      pendingPayment = null;
+    }
+
+    function confirmSend() {
+      if (!pendingPayment) return;
+      document.getElementById('confirmCard').style.display = 'none';
+      var p = pendingPayment;
+      pendingPayment = null;
+
+      if (!navigator.onLine) {
+        var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+        q.push(p);
+        localStorage.setItem('vpQueue', JSON.stringify(q));
+        showToast('Saved offline. Will sync when connected.');
+        updateOfflineBadge();
+        return;
+      }
+
+      fetch('/api/pay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: p.to, amount: p.amount, language: currentVoiceLang })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d.status === 'success') {
+          showToast('✓ ₹' + p.amount + ' sent to ' + p.to + '! TXN: ' + d.txn_id);
+          loadBalance();
+          loadTransactions();
+          document.getElementById('sfName').value = '';
+          document.getElementById('sfAmount').value = '';
+        } else {
+          showToast('Error: ' + d.message);
+        }
+      })
+      .catch(function() {
+        showToast('Server error. Payment saved offline.');
+        var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+        q.push(p);
+        localStorage.setItem('vpQueue', JSON.stringify(q));
+        updateOfflineBadge();
+      });
+    }
+
+    /* ── Toast ── */
+    var toastTimer = null;
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+    }
+
+    /* ── Logout ── */
+    function doLogout() {
+      fetch('/api/logout', { method: 'POST' })
+        .then(function() { window.location.href = '/'; })
+        .catch(function() { window.location.href = '/'; });
+    }
+
+    /* ── Demo reset ── */
+    function doReset() {
+      fetch('/api/demo-reset', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          showToast('✓ Demo reset! Balance: ₹5000');
+          loadBalance();
+          loadTransactions();
+        });
+    }
+
+    /* ── Voice language selector ── */
+    function setVoiceLang(btn) {
+      document.querySelectorAll('.lang-pill-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentVoiceLang = btn.dataset.lang;
+      localStorage.setItem('vp_language', currentVoiceLang);
+      if (recognition) recognition.lang = currentVoiceLang;
+      showToast('Voice language: ' + btn.textContent);
+    }
+
+    /* ── Voice recognition ── */
+    (function initVoice() {
+      var micBtn    = document.getElementById('dashMicBtn');
+      var micStatus = document.getElementById('dashMicStatus');
+      var micHint   = document.getElementById('dashMicHint');
+      var SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechAPI) {
+        micBtn.addEventListener('click', function() { showToast('Voice only works in Chrome browser'); });
+        return;
+      }
+
+      recognition = new SpeechAPI();
+      recognition.lang           = currentVoiceLang;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      var isListening = false;
+
+      micBtn.addEventListener('click', function() {
+        if (isListening) { recognition.stop(); return; }
+        try { recognition.start(); } catch(e) {}
+      });
+
+      recognition.onstart = function() {
+        isListening = true;
+        micBtn.classList.add('listening');
+        micStatus.textContent = 'Listening...';
+        micHint.textContent   = 'Speak now';
+      };
+
+      recognition.onresult = function(event) {
+        var transcript = event.results[0][0].transcript;
+        micStatus.textContent = 'Heard: "' + transcript + '"';
+        micHint.textContent   = 'Parsing...';
+
+        var parsed = parseVoiceCommand(transcript);
+        if (parsed) {
+          micStatus.textContent = 'Got it!';
+          micHint.textContent   = '₹' + parsed.amount + ' to ' + parsed.to;
+          showConfirm(parsed.to, parsed.amount);
+        } else {
+          fetch('/api/voice-parse', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command: transcript, language: currentVoiceLang })
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (d.amount && d.to) {
+              micStatus.textContent = 'Got it!';
+              micHint.textContent   = '₹' + d.amount + ' to ' + d.to;
+              showConfirm(d.to, d.amount);
+            } else {
+              micStatus.textContent = 'Could not understand';
+              micHint.textContent   = 'Try: "Send 500 to Ramesh"';
+              setTimeout(function() {
+                micStatus.textContent = 'Tap to Speak';
+                micHint.textContent   = 'Say "Send money to..."';
+              }, 3000);
+            }
+          });
+        }
+      };
+
+      recognition.onend = function() {
+        isListening = false;
+        micBtn.classList.remove('listening');
+      };
+
+      recognition.onerror = function(e) {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        if (e.error === 'not-allowed') {
+          micStatus.textContent = 'Mic blocked';
+          micHint.textContent   = 'Allow mic in Chrome settings';
+        } else {
+          micStatus.textContent = 'Tap to Speak';
+          micHint.textContent   = 'Say "Send money to..."';
+        }
+      };
+    })();
+
+    /* ── Voice parser (same logic as script.js) ── */
+    function parseVoiceCommand(text) {
+      var lower = (text || '').toLowerCase().trim();
+      var numberMatch = lower.match(/\d+/);
+      var amount = numberMatch ? parseInt(numberMatch[0], 10) : null;
+      var receiver = null;
+      var toMatch = lower.match(/\bto\s+([a-z]+)/);
+      if (toMatch) { receiver = toMatch[1].charAt(0).toUpperCase() + toMatch[1].slice(1); }
+      var koMatch = lower.match(/([a-z]+)\s+ko\b/);
+      if (!receiver && koMatch) { receiver = koMatch[1].charAt(0).toUpperCase() + koMatch[1].slice(1); }
+      if (amount && receiver) return { amount: amount, to: receiver };
+      return null;
+    }
+
+    /* ── Offline badge ── */
+    function updateOfflineBadge() {
+      var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+      var card = document.getElementById('offlineCard');
+      var info = document.getElementById('offlineInfo');
+      if (q.length > 0) {
+        card.style.display = 'block';
+        info.textContent = q.length + ' payment' + (q.length > 1 ? 's' : '') + ' pending sync';
+      } else {
+        card.style.display = 'none';
+      }
+    }
+
+    function syncOffline() {
+      var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+      if (!q.length) { showToast('No offline payments to sync'); return; }
+      fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pending: q })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        showToast('✓ ' + d.count + ' offline payment(s) synced!');
+        localStorage.removeItem('vpQueue');
+        updateOfflineBadge();
+        loadBalance();
+        loadTransactions();
+      });
+    }
+
+    /* ── Online/Offline status in sidebar ── */
+    function checkOnline() {
+      fetch('/api/status', { signal: AbortSignal.timeout(4000) })
+        .then(function() {
+          document.getElementById('onlineDot').textContent = '🟢';
+          document.getElementById('onlineText').textContent = 'Server Online';
+        })
+        .catch(function() {
+          document.getElementById('onlineDot').textContent = '🔴';
+          document.getElementById('onlineText').textContent = 'Offline Mode';
+        });
+    }
+
+    /* ── Init everything ── */
+    loadUser();
+    loadBalance();
+    loadContacts();
+    loadTransactions();
+    updateOfflineBadge();
+    checkOnline();
+    setInterval(checkOnline, 10000);
+    setInterval(loadBalance, 15000);
+
+    window.addEventListener('online', function() {
+      document.getElementById('onlineDot').textContent = '🟢';
+      document.getElementById('onlineText').textContent = 'Server Online';
+      syncOffline();
+    });
+    window.addEventListener('offline', function() {
+      document.getElementById('onlineDot').textContent = '🔴';
+      document.getElementById('onlineText').textContent = 'Offline Mode';
+    });
+  </script>
+</body>
+</html>

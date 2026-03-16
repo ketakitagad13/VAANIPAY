@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, redirect
 import random
 import string
 import time
@@ -92,9 +92,10 @@ def login():
     if not phone:
         return jsonify({'status': 'error', 'message': 'Phone number is required'})
 
-    # Demo mode: accept any phone number with PIN 1234
     if pin == '1234':
+        user_info = user_accounts.get(phone, {})
         session['user']         = phone
+        session['user_name']    = user_info.get('name', 'VaaniPay User')
         session['balance']      = balance
         session['otp_verified'] = False
         return jsonify({'status': 'success', 'message': 'Login successful'})
@@ -621,6 +622,133 @@ def lookup_contact(name):
         return jsonify({'status': 'success', 'contact': contact})
 
     return jsonify({'status': 'error', 'message': f'Contact {name} not found'})
+
+# ── IN-MEMORY USER DATABASE ──────────────────────────────────────────
+# Stores accounts created via signup. Resets when server restarts.
+# { "9876543210": { phone, name, email, password, created_at } }
+user_accounts = {}
+
+# ── DASHBOARD PAGE ───────────────────────────────────────────────────
+@app.route('/dashboard')
+def dashboard():
+    """Show dashboard — only if logged in"""
+    if not session.get('user'):
+        return redirect('/')   # not logged in → back to homepage
+    return render_template('dashboard.html')
+
+# ── CREATE ACCOUNT ───────────────────────────────────────────────────
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    """
+    Create a new account.
+    Frontend sends: { name, email, phone, password }
+    """
+    data     = request.json
+    name     = data.get('name', '').strip()
+    email    = data.get('email', '').strip()
+    phone    = data.get('phone', '').strip()
+    password = data.get('password', '')
+
+    # Basic validation
+    if not name or not email or not phone or not password:
+        return jsonify({'status': 'error', 'message': 'All fields are required'})
+
+    if len(password) < 6:
+        return jsonify({'status': 'error', 'message': 'Password must be at least 6 characters'})
+
+    # Check if account already exists
+    if phone in user_accounts:
+        return jsonify({'status': 'error', 'message': 'Account with this phone already exists. Please login.'})
+
+    # Save the account
+    user_accounts[phone] = {
+        'name':       name,
+        'email':      email,
+        'phone':      phone,
+        'password':   password,   # In production: hash this with bcrypt
+        'created_at': time.strftime('%d %b %Y, %I:%M %p'),
+        'balance':    5000         # Starting balance
+    }
+
+    # Auto-login after signup
+    session['user']         = phone
+    session['user_name']    = name
+    session['balance']      = 5000
+    session['otp_verified'] = True
+
+    print(f'\n  NEW ACCOUNT: {name} | {phone} | {email}\n')
+
+    return jsonify({
+        'status':  'success',
+        'message': f'Account created! Welcome, {name}!',
+        'name':    name,
+        'phone':   phone
+    })
+
+# ── GOOGLE LOGIN (DEMO) ──────────────────────────────────────────────
+@app.route('/api/google-login', methods=['POST'])
+def google_login():
+    """
+    Demo Google login — in production you would verify the Google token.
+    For hackathon: creates/finds a demo Google account.
+    Frontend sends: { name, email } (from Google OAuth popup)
+    """
+    data  = request.json
+    name  = data.get('name', 'Google User')
+    email = data.get('email', 'demo@gmail.com')
+
+    # Use email as the "phone" key for Google users
+    key = email
+
+    if key not in user_accounts:
+        # First time Google login — create account
+        user_accounts[key] = {
+            'name':       name,
+            'email':      email,
+            'phone':      email,
+            'password':   None,    # Google users have no password
+            'provider':   'google',
+            'created_at': time.strftime('%d %b %Y, %I:%M %p'),
+            'balance':    5000
+        }
+
+    # Log them in
+    session['user']         = email
+    session['user_name']    = name
+    session['balance']      = user_accounts[key]['balance']
+    session['otp_verified'] = True
+
+    return jsonify({
+        'status':  'success',
+        'message': f'Welcome, {name}!',
+        'name':    name
+    })
+
+# ── GET USER NAME (for navbar) ───────────────────────────────────────
+@app.route('/api/me', methods=['GET'])
+def get_me():
+    """Returns current logged-in user info"""
+    user = session.get('user')
+    name = session.get('user_name', 'User')
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Not logged in'})
+    return jsonify({
+        'status':  'success',
+        'user':    user,
+        'name':    name,
+        'balance': session.get('balance', balance)
+    })
+
+# ── DEMO RESET (for judges) ──────────────────────────────────────────
+@app.route('/api/demo-reset', methods=['POST'])
+def demo_reset():
+    """Reset balance and transactions for demo purposes"""
+    global balance, transactions
+    balance      = 5000
+    transactions = []
+    if session.get('user'):
+        session['balance'] = 5000
+    return jsonify({'status': 'success', 'message': 'Demo reset! Balance: ₹5000, Transactions: cleared'})
 
 
 # ════════════════════════════════════════════════════════
