@@ -386,21 +386,35 @@ def voice_parse():
     nums   = re.findall(r'\d+', lower)
     amount = int(nums[0]) if nums else None
 
-    # Step 2 — English "to NAME" pattern — captures full name
+    # Step 2 — multilingual recipient patterns
     name = None
-    to_match = re.search(r'\bto\s+([a-z]+(?:\s+[a-z]+)?)', lower)
-    if to_match:
-        raw = to_match.group(1)
-        # Remove noise words
-        noise = ['please', 'now', 'ji', 'bhai', 'didi', 'sir', 'madam']
-        parts = [w for w in raw.split() if w not in noise]
-        name  = ' '.join(p.capitalize() for p in parts) if parts else None
 
-    # Step 3 — Hindi "NAME ko" pattern fallback
+    # Common connector words across supported languages
+    to_words = [
+        'to', 'ko', 'को', 'কে', 'க்கு', 'కు', 'ಗೆ', 'ને', 'ਨੂੰ', 'କୁ', 'کے'
+    ]
+
+    # Try: connector + name, e.g. "to ramesh", "को रमेश"
+    for word in to_words:
+        pattern = r'(?:\b|\s)' + re.escape(word) + r'(?:\b|\s)+([\w\u0900-\u097F\u0980-\u09FF\u0A00-\u0A7F\u0A80-\u0AFF\u0B00-\u0B7F\u0B80-\u0BFF\u0C00-\u0C7F\u0C80-\u0CFF\u0D00-\u0D7F]+(?:\s+[\w\u0900-\u097F\u0980-\u09FF\u0A00-\u0A7F\u0A80-\u0AFF\u0B00-\u0B7F\u0B80-\u0BFF\u0C00-\u0C7F\u0C80-\u0CFF\u0D00-\u0D7F]+)?)'
+        m = re.search(pattern, lower)
+        if m:
+            raw = m.group(1).strip()
+            raw = re.sub(r'\b(please|now|ji|bhai|didi|sir|madam)\b', '', raw, flags=re.IGNORECASE).strip()
+            if raw:
+                name = ' '.join([w.capitalize() for w in raw.split()[:2]])
+                break
+
+    # Try: name + connector, e.g. "ramesh ko"
     if not name:
-        ko_match = re.search(r'([a-z]+)\s+ko\b', lower)
-        if ko_match:
-            name = ko_match.group(1).capitalize()
+        for word in to_words:
+            pattern = r'([\w\u0900-\u097F\u0980-\u09FF\u0A00-\u0A7F\u0A80-\u0AFF\u0B00-\u0B7F\u0B80-\u0BFF\u0C00-\u0C7F\u0C80-\u0CFF\u0D00-\u0D7F]+(?:\s+[\w\u0900-\u097F\u0980-\u09FF\u0A00-\u0A7F\u0A80-\u0AFF\u0B00-\u0B7F\u0B80-\u0BFF\u0C00-\u0C7F\u0C80-\u0CFF\u0D00-\u0D7F]+)?)\s+' + re.escape(word) + r'(?:\b|\s)'
+            m = re.search(pattern, lower)
+            if m:
+                raw = m.group(1).strip()
+                if raw:
+                    name = ' '.join([w.capitalize() for w in raw.split()[:2]])
+                    break
 
     # Step 4 — build response
     if amount and name:

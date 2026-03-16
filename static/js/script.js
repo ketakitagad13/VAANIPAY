@@ -429,8 +429,35 @@ function parseCommand(text) {
   }
 
   function getVoiceLanguage() {
-    var saved = window.localStorage ? (localStorage.getItem('vp_language') || localStorage.getItem('vp_lang')) : null;
+    var saved = null;
+    if (window.localStorage) {
+      saved = localStorage.getItem('vaanipay-lang')
+        || localStorage.getItem('vp_language')
+        || localStorage.getItem('vp_lang');
+    }
+
     var lang = saved || navigator.language || 'hi-IN';
+    var supported = {
+      'en-IN': true, 'hi-IN': true, 'bn-IN': true, 'ta-IN': true, 'te-IN': true,
+      'mr-IN': true, 'gu-IN': true, 'kn-IN': true, 'ml-IN': true, 'pa-IN': true,
+      'or-IN': true, 'ur-IN': true
+    };
+
+    if (!supported[lang]) {
+      if (lang.indexOf('hi') === 0) return 'hi-IN';
+      if (lang.indexOf('bn') === 0) return 'bn-IN';
+      if (lang.indexOf('ta') === 0) return 'ta-IN';
+      if (lang.indexOf('te') === 0) return 'te-IN';
+      if (lang.indexOf('mr') === 0) return 'mr-IN';
+      if (lang.indexOf('gu') === 0) return 'gu-IN';
+      if (lang.indexOf('kn') === 0) return 'kn-IN';
+      if (lang.indexOf('ml') === 0) return 'ml-IN';
+      if (lang.indexOf('pa') === 0) return 'pa-IN';
+      if (lang.indexOf('or') === 0) return 'or-IN';
+      if (lang.indexOf('ur') === 0) return 'ur-IN';
+      return 'en-IN';
+    }
+
     return lang;
   }
 
@@ -574,6 +601,7 @@ function parseCommand(text) {
 
   /* Step 3 — Wire mic button click */
   micBtn.addEventListener('click', function() {
+    recognition.lang = getVoiceLanguage();
     if (isListening) {
       recognition.stop();
       return;
@@ -682,6 +710,9 @@ function parseCommand(text) {
     micBtn.style.background = '';
     if (event.error === 'not-allowed') {
       setMicUI('Mic Blocked', 'Allow mic in Chrome settings');
+    } else if (event.error === 'language-not-supported') {
+      recognition.lang = 'en-IN';
+      setMicUI('Language not supported', 'Switched to English');
     } else if (event.error === 'no-speech') {
       setMicUI('No speech heard', 'Tap and speak clearly');
     } else {
@@ -1200,6 +1231,7 @@ function parseCommand(text) {
     applyLang(lang);
     closeDropdown();
     localStorage.setItem('vaanipay-lang', lang);
+    localStorage.setItem('vp_language', lang);
     showToast('🌐 ' + native + ' (' + name + ') selected');
   }
 
