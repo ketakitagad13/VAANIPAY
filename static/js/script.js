@@ -857,3 +857,85 @@
   applyLang(saved);
 
 })();
+/* =====================================
+   10. WALLET API CONNECTION
+   ===================================== */
+
+// Load balance
+async function loadBalance(){
+
+const res = await fetch("/api/balance");
+const data = await res.json();
+
+document.getElementById("walletBalance").innerText =
+"₹" + data.balance;
+
+}
+
+
+// Send money
+async function vaaniSendMoney(name, amount){
+
+const res = await fetch("/api/send",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:name,
+amount:amount
+})
+});
+
+const data = await res.json();
+
+if(data.success){
+
+alert("Payment successful");
+
+document.getElementById("walletBalance").innerText =
+"₹" + data.balance;
+
+loadTransactions();
+
+}
+else{
+
+alert(data.message);
+
+}
+
+}
+
+
+// Load transactions
+async function loadTransactions(){
+
+const res = await fetch("/api/transactions");
+const data = await res.json();
+
+const list = document.getElementById("txnList");
+
+list.innerHTML="";
+
+data.reverse().forEach(txn=>{
+
+const item=document.createElement("div");
+
+item.innerHTML=
+txn.name+" - ₹"+txn.amount;
+
+list.appendChild(item);
+
+});
+
+}
+
+
+// Load when page opens
+window.onload=function(){
+
+loadBalance();
+loadTransactions();
+
+};
