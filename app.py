@@ -588,11 +588,11 @@ def set_language():
 
 # In-memory contacts store
 contacts = {
-    'Ramesh': {'name': 'Ramesh Kumar',  'upi': 'ramesh@upi',  'count': 5},
+    'Ramesh': {'name': 'Ramesh Kumar',  'upi': 'ramesh.k@upi',  'phone': '9876543210', 'count': 5},
+    'Ramesh2': {'name': 'Ramesh Sharma', 'upi': 'ramesh.s@upi', 'phone': '9123456789', 'count': 2},
     'Priya':  {'name': 'Priya Sharma',  'upi': 'priya@upi',   'count': 3},
     'Suresh': {'name': 'Suresh Reddy',  'upi': 'suresh@upi',  'count': 2},
 }
-
 
 @app.route('/api/contacts', methods=['GET'])
 def get_contacts():
@@ -631,20 +631,23 @@ def add_contact():
 
 @app.route('/api/contacts/lookup/<name>', methods=['GET'])
 def lookup_contact(name):
-    """
-    Look up a contact by first name.
-    Used by voice parser to resolve "Ramesh" → full UPI ID
-    """
-    key     = name.strip().capitalize()
-    contact = contacts.get(key)
-
-    if contact:
-        # Increment payment count
-        contacts[key]['count'] = contacts[key].get('count', 0) + 1
-        return jsonify({'status': 'success', 'contact': contact})
-
+    key = name.strip().capitalize()
+    
+    # Find ALL contacts whose first name matches
+    matches = [c for k, c in contacts.items() 
+               if c['name'].split()[0].lower() == key.lower()]
+    
+    if len(matches) == 1:
+        contacts_list = list(contacts.values())
+        for c in contacts_list:
+            if c['name'].split()[0].lower() == key.lower():
+                c['count'] = c.get('count', 0) + 1
+        return jsonify({'status': 'success', 'contact': matches[0], 'multiple': False})
+    
+    elif len(matches) > 1:
+        return jsonify({'status': 'multiple', 'contacts': matches, 'multiple': True})
+    
     return jsonify({'status': 'error', 'message': f'Contact {name} not found'})
-
 # ── IN-MEMORY USER DATABASE ──────────────────────────────────────────
 # Stores accounts created via signup. Resets when server restarts.
 # { "9876543210": { phone, name, email, password, created_at } }
@@ -872,6 +875,22 @@ def init_db():
     db.close()
     print('  SQLite database ready: vaanipay.db')
 
+
+@app.route('/api/verify-pin', methods=['POST'])
+def verify_pin():
+    """
+    Verify the user's payment PIN before processing payment.
+    Demo PIN is 1234. In production this would be a separate hashed PIN.
+    """
+    data = request.json
+    entered_pin = data.get('pin', '')
+    
+    # Demo: PIN is always 1234
+    # In production: store hashed PIN per user in database
+    if entered_pin == '1234':
+        return jsonify({'status': 'success', 'message': 'PIN verified'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Wrong PIN. Demo PIN is 1234'})
 # ════════════════════════════════════════════════════════
 #  SAVE TO SQLITE ON EVERY PAYMENT (patch existing /api/pay)
 # ════════════════════════════════════════════════════════

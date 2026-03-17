@@ -8,6 +8,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
+
+    .pin-inp {
+  width: 46px; height: 50px; text-align: center;
+  font-size: 1.4rem; font-weight: 800;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--off); color: var(--text); outline: none;
+  transition: border-color 0.2s;
+}
+.pin-inp:focus { border-color: var(--g1); background: #fff; }
+
+
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -106,7 +118,6 @@
       background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E");
     }
     .wc-inner { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .wc-left {}
     .wc-greeting {
       font-size: 0.82rem; color: rgba(255,255,255,0.65);
       margin-bottom: 3px; font-weight: 500;
@@ -269,7 +280,7 @@
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ── CONFIRM CARD ── */
-    #confirmCard {
+    /* #confirmCard {
       position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
       background: #fff; border-radius: 24px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.18);
@@ -278,7 +289,8 @@
       border: 2px solid var(--g1);
       font-family: 'Nunito', sans-serif;
       display: none;
-    }
+    } */
+
     .cc-label { font-size: 0.72rem; font-weight: 700; color: var(--g1); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
     .cc-amount { font-size: 2.2rem; font-weight: 800; color: #0d1f12; margin-bottom: 5px; }
     .cc-to { font-size: 1rem; color: var(--mid); margin-bottom: 22px; }
@@ -294,6 +306,17 @@
       display: none;
     }
     .otp-debug.show { display: block; }
+
+    .pin-inp {
+  width: 46px; height: 50px; text-align: center;
+  font-size: 1.4rem; font-weight: 800;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--off); color: var(--text); outline: none;
+  transition: border-color 0.2s;
+}
+.pin-inp:focus { border-color: var(--g1); background: #fff; }
+
+
 
     /* ── RESPONSIVE ── */
     @media(max-width: 480px) {
@@ -465,9 +488,20 @@
     <div class="cc-label">Confirm Payment</div>
     <div class="cc-amount" id="ccAmount">₹0</div>
     <div class="cc-to">to <strong id="ccTo">—</strong></div>
+    <div id="ccReceiverDetail" style="font-size:0.78rem;color:#6b7280;margin-bottom:14px;min-height:18px"></div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:0.78rem;font-weight:700;color:#4a6652;margin-bottom:8px;text-align:left">Enter your 4-digit PIN to confirm</div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <input class="pin-inp" type="password" maxlength="1" inputmode="numeric" id="pin1" />
+        <input class="pin-inp" type="password" maxlength="1" inputmode="numeric" id="pin2" />
+        <input class="pin-inp" type="password" maxlength="1" inputmode="numeric" id="pin3" />
+        <input class="pin-inp" type="password" maxlength="1" inputmode="numeric" id="pin4" />
+      </div>
+      <div id="pinError" style="font-size:0.75rem;color:#dc2626;margin-top:6px;display:none;text-align:center">Wrong PIN. Try again.</div>
+    </div>
     <div class="cc-btns">
       <button class="cc-cancel" onclick="cancelConfirm()">Cancel</button>
-      <button class="cc-send" onclick="confirmSend()">Send ✓</button>
+      <button class="cc-send" id="ccSendBtn" onclick="confirmSend()">Send ✓</button>
     </div>
   </div>
 
@@ -595,58 +629,193 @@
     }
 
     /* ── Confirm card ── */
+    // function showConfirm(name, amount) {
+    //   pendingPayment = { to: name, amount: amount };
+    //   document.getElementById('ccAmount').textContent = '₹' + amount.toLocaleString('en-IN');
+    //   document.getElementById('ccTo').textContent = name;
+    //   document.getElementById('confirmCard').style.display = 'block';
+    // }
+
+    // function cancelConfirm() {
+    //   document.getElementById('confirmCard').style.display = 'none';
+    //   pendingPayment = null;
+    // }
+
+    // function confirmSend() {
+    //   if (!pendingPayment) return;
+    //   document.getElementById('confirmCard').style.display = 'none';
+    //   var p = pendingPayment;
+    //   pendingPayment = null;
+
+    //   if (!navigator.onLine) {
+    //     var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+    //     q.push(p);
+    //     localStorage.setItem('vpQueue', JSON.stringify(q));
+    //     showToast('Saved offline. Will sync when connected.');
+    //     updateOfflineBadge();
+    //     return;
+    //   }
+
+    //   fetch('/api/pay', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ to: p.to, amount: p.amount, language: currentVoiceLang })
+    //   })
+    //   .then(function(r) { return r.json(); })
+    //   .then(function(d) {
+    //     if (d.status === 'success') {
+    //       showToast('✓ ₹' + p.amount + ' sent to ' + p.to + '! TXN: ' + d.txn_id);
+    //       loadBalance();
+    //       loadTransactions();
+    //       document.getElementById('sfName').value = '';
+    //       document.getElementById('sfAmount').value = '';
+    //     } else {
+    //       showToast('Error: ' + d.message);
+    //     }
+    //   })
+    //   .catch(function() {
+    //     showToast('Server error. Payment saved offline.');
+    //     var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+    //     q.push(p);
+    //     localStorage.setItem('vpQueue', JSON.stringify(q));
+    //     updateOfflineBadge();
+    //   });
+    // }
+
     function showConfirm(name, amount) {
-      pendingPayment = { to: name, amount: amount };
-      document.getElementById('ccAmount').textContent = '₹' + amount.toLocaleString('en-IN');
-      document.getElementById('ccTo').textContent = name;
-      document.getElementById('confirmCard').style.display = 'block';
-    }
+  pendingPayment = { to: name, amount: amount };
+  document.getElementById('ccAmount').textContent = '₹' + amount.toLocaleString('en-IN');
+  document.getElementById('ccTo').textContent = name;
+  
+  // Clear PIN boxes
+  ['pin1','pin2','pin3','pin4'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('pinError').style.display = 'none';
+  
+  // Look up receiver details for double-check
+  var detail = document.getElementById('ccReceiverDetail');
+  detail.textContent = 'Looking up receiver...';
+//   fetch('/api/contacts/lookup/' + encodeURIComponent(name.split(' ')[0]))
+//     .then(function(r) { return r.json(); })
+//     .then(function(d) {
+//       if (d.status === 'success' && d.contact) {
+//         detail.innerHTML = '✓ ' + d.contact.name + ' &nbsp;·&nbsp; ' + d.contact.upi;
+//         detail.style.color = '#16a34a';
+//       } else {
+//         detail.textContent = '⚠ New recipient — not in contacts';
+//         detail.style.color = '#d97706';
+//       }
+//     })
+//     .catch(function() { detail.textContent = ''; });
 
-    function cancelConfirm() {
-      document.getElementById('confirmCard').style.display = 'none';
-      pendingPayment = null;
+fetch('/api/contacts/lookup/' + encodeURIComponent(name.split(' ')[0]))
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.status === 'multiple') {
+      // Show picker
+      detail.innerHTML = '⚠ Multiple contacts named "' + name.split(' ')[0] + '" — choose one:';
+      detail.style.color = '#d97706';
+      d.contacts.forEach(function(c) {
+        var btn = document.createElement('button');
+        btn.style.cssText = 'display:block;width:100%;margin-top:6px;padding:8px 12px;border:1.5px solid #d0e8d8;border-radius:8px;background:#f7fbf8;text-align:left;cursor:pointer;font-size:0.82rem;';
+        btn.innerHTML = '<strong>' + c.name + '</strong> · ' + c.upi;
+        btn.onclick = function() {
+          detail.textContent = '✓ ' + c.name + ' · ' + c.upi;
+          detail.style.color = '#16a34a';
+          pendingPayment.to = c.name;
+          document.getElementById('ccTo').textContent = c.name;
+          // Remove all picker buttons
+          detail.querySelectorAll && detail.parentNode.querySelectorAll('button.picker-btn').forEach(function(b){b.remove();});
+        };
+        btn.className = 'picker-btn';
+        detail.parentNode.insertBefore(btn, detail.nextSibling);
+      });
+    } else if (d.status === 'success') {
+      detail.innerHTML = '✓ ' + d.contact.name + ' &nbsp;·&nbsp; ' + d.contact.upi;
+      detail.style.color = '#16a34a';
+    } else {
+      detail.textContent = '⚠ New recipient — not in contacts';
+      detail.style.color = '#d97706';
     }
+  });
 
-    function confirmSend() {
-      if (!pendingPayment) return;
+  document.getElementById('confirmCard').style.display = 'block';
+  setTimeout(function() { document.getElementById('pin1').focus(); }, 100);
+}
+
+function confirmSend() {
+  var pin = ['pin1','pin2','pin3','pin4'].map(function(id) {
+    return document.getElementById(id).value;
+  }).join('');
+  
+  if (pin.length < 4) {
+    document.getElementById('pinError').textContent = 'Please enter your 4-digit PIN.';
+    document.getElementById('pinError').style.display = 'block';
+    return;
+  }
+
+  // Verify PIN with backend before sending
+  var btn = document.getElementById('ccSendBtn');
+  btn.textContent = 'Verifying...';
+  btn.disabled = true;
+
+  fetch('/api/verify-pin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pin: pin })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    btn.textContent = 'Send ✓';
+    btn.disabled = false;
+    if (d.status === 'success') {
       document.getElementById('confirmCard').style.display = 'none';
       var p = pendingPayment;
       pendingPayment = null;
-
-      if (!navigator.onLine) {
-        var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
-        q.push(p);
-        localStorage.setItem('vpQueue', JSON.stringify(q));
-        showToast('Saved offline. Will sync when connected.');
-        updateOfflineBadge();
-        return;
-      }
-
-      fetch('/api/pay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to: p.to, amount: p.amount, language: currentVoiceLang })
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (d.status === 'success') {
-          showToast('✓ ₹' + p.amount + ' sent to ' + p.to + '! TXN: ' + d.txn_id);
-          loadBalance();
-          loadTransactions();
-          document.getElementById('sfName').value = '';
-          document.getElementById('sfAmount').value = '';
-        } else {
-          showToast('Error: ' + d.message);
-        }
-      })
-      .catch(function() {
-        showToast('Server error. Payment saved offline.');
-        var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
-        q.push(p);
-        localStorage.setItem('vpQueue', JSON.stringify(q));
-        updateOfflineBadge();
+      doSendPayment(p);
+    } else {
+      document.getElementById('pinError').textContent = 'Wrong PIN. Try again.';
+      document.getElementById('pinError').style.display = 'block';
+      // Clear and refocus PIN
+      ['pin1','pin2','pin3','pin4'].forEach(function(id) {
+        document.getElementById(id).value = '';
       });
+      document.getElementById('pin1').focus();
     }
+  });
+}
+
+// Move the actual payment logic here
+function doSendPayment(p) {
+  if (!navigator.onLine) {
+    var q = JSON.parse(localStorage.getItem('vpQueue') || '[]');
+    q.push(p);
+    localStorage.setItem('vpQueue', JSON.stringify(q));
+    showToast('Saved offline. Will sync when connected.');
+    updateOfflineBadge();
+    return;
+  }
+
+  fetch('/api/pay', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ to: p.to, amount: p.amount, language: currentVoiceLang })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.status === 'success') {
+      showToast('✓ ₹' + p.amount + ' sent to ' + p.to + '! TXN: ' + d.txn_id);
+      loadBalance();
+      loadTransactions();
+      document.getElementById('sfName').value = '';
+      document.getElementById('sfAmount').value = '';
+    } else {
+      showToast('Error: ' + d.message);
+    }
+  });
+}
+
 
     /* ── Toast ── */
     var toastTimer = null;
@@ -709,6 +878,29 @@
         try { recognition.start(); } catch(e) {}
       });
 
+
+      // PIN auto-advance
+(function() {
+  var pinIds = ['pin1','pin2','pin3','pin4'];
+  pinIds.forEach(function(id, i, arr) {
+    var inp = document.getElementById(id);
+    if (!inp) return;
+    inp.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+      if (this.value.length === 1 && i < arr.length - 1) {
+        document.getElementById(arr[i+1]).focus();
+      }
+      if (i === arr.length - 1 && this.value.length === 1) {
+        setTimeout(confirmSend, 200);
+      }
+    });
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !this.value && i > 0) {
+        document.getElementById(arr[i-1]).focus();
+      }
+    });
+  });
+})();
       recognition.onstart = function() {
         isListening = true;
         micBtn.classList.add('listening');

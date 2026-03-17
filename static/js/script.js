@@ -563,8 +563,46 @@ function parseCommand(text) {
      CONFIRMATION CARD
      Shows parsed result before sending
   ════════════════════════════════════════ */
+  // function showConfirmCard(parsed, onConfirm, onCancel) {
+  //   /* Remove any existing card first */
+  //   var old = document.getElementById('vpConfirmCard');
+  //   if (old) old.remove();
+
+  //   var card = document.createElement('div');
+  //   card.id = 'vpConfirmCard';
+  //   card.style.cssText = [
+  //     'position:fixed', 'bottom:100px', 'left:50%',
+  //     'transform:translateX(-50%)',
+  //     'background:#fff', 'border-radius:20px',
+  //     'box-shadow:0 20px 60px rgba(0,0,0,0.18)',
+  //     'padding:24px 28px', 'z-index:99999',
+  //     'min-width:280px', 'text-align:center',
+  //     'border:2px solid #2eb050',
+  //     'font-family:Nunito,sans-serif'
+  //   ].join(';');
+
+  //   card.innerHTML =
+  //     '<div style="font-size:.75rem;font-weight:700;color:#2eb050;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Confirm Payment</div>' +
+  //     '<div style="font-size:2rem;font-weight:800;color:#0d1f12;margin-bottom:4px">₹' + parsed.amount + '</div>' +
+  //     '<div style="font-size:1rem;color:#4a6652;margin-bottom:20px">to <strong>' + parsed.to + '</strong></div>' +
+  //     '<div style="display:flex;gap:10px;justify-content:center">' +
+  //       '<button id="vpCancelBtn" style="flex:1;padding:12px;border-radius:50px;border:2px solid #d0e8d8;background:#fff;color:#4a6652;font-family:Nunito,sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">Cancel</button>' +
+  //       '<button id="vpSendBtn"   style="flex:1;padding:12px;border-radius:50px;border:none;background:#2eb050;color:#fff;font-family:Nunito,sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">Send ✓</button>' +
+  //     '</div>';
+
+  //   document.body.appendChild(card);
+
+  //   document.getElementById('vpSendBtn').addEventListener('click', function() {
+  //     card.remove();
+  //     onConfirm();
+  //   });
+  //   document.getElementById('vpCancelBtn').addEventListener('click', function() {
+  //     card.remove();
+  //     onCancel();
+  //   });
+
+
   function showConfirmCard(parsed, onConfirm, onCancel) {
-    /* Remove any existing card first */
     var old = document.getElementById('vpConfirmCard');
     if (old) old.remove();
 
@@ -587,7 +625,7 @@ function parseCommand(text) {
       '<div style="font-size:1rem;color:#4a6652;margin-bottom:20px">to <strong>' + parsed.to + '</strong></div>' +
       '<div style="display:flex;gap:10px;justify-content:center">' +
         '<button id="vpCancelBtn" style="flex:1;padding:12px;border-radius:50px;border:2px solid #d0e8d8;background:#fff;color:#4a6652;font-family:Nunito,sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">Cancel</button>' +
-        '<button id="vpSendBtn"   style="flex:1;padding:12px;border-radius:50px;border:none;background:#2eb050;color:#fff;font-family:Nunito,sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">Send ✓</button>' +
+        '<button id="vpSendBtn" style="flex:1;padding:12px;border-radius:50px;border:none;background:#2eb050;color:#fff;font-family:Nunito,sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">Send ✓</button>' +
       '</div>';
 
     document.body.appendChild(card);
@@ -601,8 +639,9 @@ function parseCommand(text) {
       onCancel();
     });
 
-    /* Auto-dismiss after 15 seconds */
-    setTimeout(function() { if (card.parentNode) card.remove(); }, 15000);
+    setTimeout(function() {
+      if (card.parentNode) card.remove();
+    }, 15000);
   }
 
   /* ════════════════════════════════════════
