@@ -5,6 +5,12 @@ import time
 import os
 import re
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 app = Flask(__name__)
 app.secret_key = 'vaanipay_secret_key_2024'
 
@@ -15,6 +21,7 @@ app.secret_key = 'vaanipay_secret_key_2024'
 transactions = []   # list of all payments made
 balance = 5000      # starting balance in rupees
 otp_store = {}      # stores OTPs: { phone: { otp, time } }
+user_accounts = {}
 
 # ─── LANGUAGE NAMES ──────────────────────────────────────────────────────────
 LANGUAGES = {
@@ -238,9 +245,8 @@ def pay():
         'type':     'sent',
         'status':   'completed',
     }
-    # transactions.append(txn)
     transactions.append(txn)
-    save_txn_to_db(txn_id, receiver, amount, lang)  # ← ADD THIS LINE
+    save_txn_to_db(txn_id, receiver, amount, lang)
     session['balance'] = balance
 
     print(f'\n  PAYMENT: ₹{amount} → {receiver} | TXN: {txn_id} | Balance: ₹{balance}\n')
@@ -642,7 +648,7 @@ def lookup_contact(name):
 # ── IN-MEMORY USER DATABASE ──────────────────────────────────────────
 # Stores accounts created via signup. Resets when server restarts.
 # { "9876543210": { phone, name, email, password, created_at } }
-user_accounts = {}
+
 
 # ── DASHBOARD PAGE ───────────────────────────────────────────────────
 @app.route('/dashboard')
@@ -888,8 +894,14 @@ def save_txn_to_db(txn_id, receiver, amount, language='hi-IN'):
 # if __name__ == '__main__':
 #     # Make sure the required folders exist
 #     os.makedirs('static/css',    exist_ok=True)
+# if __name__ == '__main__':
+#     init_db()   # ← ADD THIS LINE
+#     os.makedirs('static/css',    exist_ok=True)
+#     os.makedirs('static/js',     exist_ok=True)
+#     os.makedirs('static/assets', exist_ok=True)
+
 if __name__ == '__main__':
-    init_db()   # ← ADD THIS LINE
+    init_db()
     os.makedirs('static/css',    exist_ok=True)
     os.makedirs('static/js',     exist_ok=True)
     os.makedirs('static/assets', exist_ok=True)
@@ -900,4 +912,5 @@ if __name__ == '__main__':
     print('  Press Ctrl+C to stop')
     print('='*50 + '\n')
 
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
